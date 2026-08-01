@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-08-02",
+  "packageName": "tw.sonet.magiaexedra",
+  "source": "APKPure direct XAPK distribution",
+  "latestVersion": "1.1.2",
+  "latestEndpoint": "https://d.apkpure.com/b/XAPK/tw.sonet.magiaexedra?version=latest",
+  "releases": [
+    {
+      "versionName": "1.1.2",
+      "versionCode": 26072717,
+      "length": 769197299,
+      "sha256": "664dfbc307c5f6b640d01b1fc661de02fa30fc382a68426530abc657dc9e2d14",
+      "splits": {
+        "base": {
+          "length": 15521887,
+          "sha256": "ceafa5ba761b8d3996ce2718ff163b8b21707fdc1d304d6edc27b8582c93038e"
+        },
+        "base_assets": {
+          "length": 522274683,
+          "sha256": "0d21a05fd1007b31a1a6fa72561c6d6f2eeaa8353492913dd925465bc10d82ed"
+        },
+        "config.arm64_v8a": {
+          "length": 231099307,
+          "sha256": "19466690a93ae7ea84485b86453901c5ed7745aea2b2d0cd4098bb13b02c69c5"
+        }
+      }
+    },
+    {
+      "versionName": "1.0.5",
+      "versionCode": 26032510,
+      "length": 740843302,
+      "sha256": "9ed2f73182e0e6369f757124570b36cac3ba8dcd6a545a6e4e19881d53ff084a",
+      "splits": {
+        "base": {
+          "length": 15025708,
+          "sha256": "d1c09d6adfae4b0fafc2dd48e33859d4a5cbc2f922ae6c616c3c07581711f116"
+        },
+        "base_assets": {
+          "length": 500097648,
+          "sha256": "778083560acbdd510630e5db879bbeacbb5040dedbefda0ecb7d4c18b8aa1884"
+        },
+        "config.arm64_v8a": {
+          "length": 225713141,
+          "sha256": "812f4a0908c44622bb42c28a835f300a39c575d6343360498880b94f2fd709c4"
+        }
+      }
+    }
+  ]
+}
