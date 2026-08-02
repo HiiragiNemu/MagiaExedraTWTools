@@ -107,7 +107,15 @@ with log_path.open("a", encoding="utf-8") as handle:
     handle.write(json.dumps(args) + "\n")
 def save():
     state_path.write_text(json.dumps(state), encoding="utf-8")
-if args == ["get-state"]:
+if args == ["devices", "-l"]:
+    print("List of devices attached")
+    for device in state.get("devices", [{"serial": "offline:1", "state": "device", "details": "model:Fake_MuMu"}]):
+        print(f"{device['serial']}\t{device['state']} {device.get('details', '')}".rstrip())
+elif args[:1] == ["connect"]:
+    address = args[1]
+    state.setdefault("devices", []).append({"serial": address, "state": "device", "details": "model:Fake_MuMu"})
+    save(); print(f"connected to {address}")
+elif args == ["get-state"]:
     print("device")
 elif args == ["shell", "id", "-u"]:
     print(state["uid"])
@@ -278,6 +286,102 @@ class TwInstallerCliTest(unittest.TestCase):
             with tempfile.TemporaryDirectory() as output:
                 with self.assertRaises(installer.ToolError):
                     installer.extract_and_validate_xapk(xapk, Path(output))
+
+    def test_adb_discovery_parses_states_and_multiple_devices_require_selection(self) -> None:
+        parsed = installer.parse_adb_devices(
+            "List of devices attached\n"
+            "127.0.0.1:16384 device product:mumu model:MuMu_12 transport_id:1\n"
+            "emulator-5554 offline transport_id:2\n"
+            "usb-device unauthorized usb:1-2\n"
+        )
+        self.assertEqual([device.serial for device in parsed], ["127.0.0.1:16384", "emulator-5554", "usb-device"])
+        self.assertEqual([device.state for device in parsed], ["device", "offline", "unauthorized"])
+
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            adb = _write_fake_adb(root)
+            state_path = root / "device-state.json"
+            log_path = root / "adb.log"
+            state_path.write_text(
+                json.dumps(
+                    {
+                        "devices": [
+                            {"serial": "127.0.0.1:16384", "state": "device", "details": "model:MuMu_A"},
+                            {"serial": "127.0.0.1:16416", "state": "device", "details": "model:MuMu_B"},
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+            environment = {"FAKE_ADB_STATE": str(state_path), "FAKE_ADB_LOG": str(log_path)}
+            with mock.patch.dict(os.environ, environment), mock.patch("builtins.input", return_value="2"):
+                self.assertEqual(installer._choose_device(str(adb)), "127.0.0.1:16416")
+
+    def test_missing_configured_adb_has_actionable_error(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            missing = str(Path(temporary) / "missing-adb")
+            with mock.patch.dict(os.environ, {"TW_ADB": missing}, clear=False):
+                with self.assertRaisesRegex(installer.ToolError, "TW_ADB points to a missing"):
+                    installer.find_adb_executable()
+
+    def test_no_argument_python_wizard_uses_fake_adb_and_keeps_game_stopped(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            xapk = root / "tw-client.xapk"
+            _write_xapk(xapk)
+            release_manifest = root / "known-releases.json"
+            _write_release_manifest(release_manifest, xapk)
+            adb = _write_fake_adb(root)
+            state_path = root / "device-state.json"
+            log_path = root / "adb.log"
+            state_path.write_text(
+                json.dumps(
+                    {
+                        "uid": "0",
+                        "installed": True,
+                        "installer": None,
+                        "versionName": "1.0.5",
+                        "versionCode": "26032510",
+                        "previousVersionName": "1.0.5",
+                        "previousVersionCode": "26032510",
+                        "targetVersionName": "1.1.2",
+                        "targetVersionCode": "26072717",
+                        "devices": [
+                            {"serial": "127.0.0.1:16384", "state": "device", "details": "model:Fake_MuMu"}
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            environment = os.environ.copy()
+            environment.update(
+                TW_ADB=str(adb),
+                TW_XAPK=str(xapk),
+                TW_RELEASE_MANIFEST=str(release_manifest),
+                TW_STATE_PARENT=str(root / "states"),
+                FAKE_ADB_STATE=str(state_path),
+                FAKE_ADB_LOG=str(log_path),
+            )
+            result = subprocess.run(
+                [sys.executable, str(ROOT / "install_tw.py")],
+                input="1\ny\n\n",
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                capture_output=True,
+                cwd=root,
+                env=environment,
+            )
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertIn("Launch after install: no", result.stdout)
+            self.assertIn("remains stopped", result.stdout)
+            calls = [json.loads(line) for line in log_path.read_text(encoding="utf-8").splitlines()]
+            install = next(call for call in calls if call[:1] == ["install-multiple"])
+            self.assertEqual(install[1:4], ["-r", "-i", "com.android.vending"])
+            self.assertFalse(any(call[:2] == ["shell", "monkey"] for call in calls))
+            final_state = json.loads(state_path.read_text(encoding="utf-8"))
+            self.assertEqual(final_state["versionName"], "1.1.2")
+            self.assertTrue(final_state["installed"])
 
     def test_fresh_install_defaults_to_no_launch_and_rolls_back_to_absent(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

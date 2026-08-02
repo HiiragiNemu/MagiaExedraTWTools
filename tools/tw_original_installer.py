@@ -112,6 +112,13 @@ class ReleaseManifest:
         return self.releases[self.latest_version]
 
 
+@dataclasses.dataclass(frozen=True)
+class AdbDevice:
+    serial: str
+    state: str
+    details: str
+
+
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
@@ -1070,6 +1077,287 @@ def new_state_directory(parent: Path | None) -> Path:
     return candidate
 
 
+def _resolve_executable(value: str | os.PathLike[str]) -> str | None:
+    text = os.path.expandvars(os.path.expanduser(os.fspath(value).strip().strip('"')))
+    if not text:
+        return None
+    resolved = shutil.which(text)
+    if resolved:
+        return str(Path(resolved).resolve())
+    path = Path(text)
+    if path.is_file():
+        return str(path.resolve())
+    return None
+
+
+def _common_adb_candidates() -> list[Path]:
+    candidates = [
+        REPOSITORY_ROOT / "adb.exe",
+        REPOSITORY_ROOT / "platform-tools" / "adb.exe",
+        REPOSITORY_ROOT.parent / "platform-tools" / "adb.exe",
+    ]
+    for variable in ("ANDROID_HOME", "ANDROID_SDK_ROOT"):
+        if os.environ.get(variable):
+            candidates.append(Path(os.environ[variable]) / "platform-tools" / "adb.exe")
+    if os.environ.get("LOCALAPPDATA"):
+        candidates.append(Path(os.environ["LOCALAPPDATA"]) / "Android" / "Sdk" / "platform-tools" / "adb.exe")
+    program_roots: list[Path] = []
+    for variable in ("ProgramW6432", "ProgramFiles", "ProgramFiles(x86)"):
+        if os.environ.get(variable):
+            program_roots.append(Path(os.environ[variable]))
+    for root in program_roots:
+        netease = root / "Netease"
+        if netease.is_dir():
+            with contextlib.suppress(OSError):
+                candidates.extend(netease.glob("MuMu*/shell/adb.exe"))
+                candidates.extend(netease.glob("MuMu*/adb.exe"))
+                candidates.extend(netease.glob("MuMu*/nx_device/*/shell/adb.exe"))
+                candidates.extend(netease.glob("MuMu*/nx_main/adb.exe"))
+    return candidates
+
+
+def find_adb_executable() -> str:
+    configured = os.environ.get("TW_ADB")
+    if configured:
+        resolved = _resolve_executable(configured)
+        if resolved:
+            return resolved
+        raise ToolError(f"TW_ADB points to a missing adb executable: {configured}")
+    for value in (os.environ.get("ADB"), "adb"):
+        if value and (resolved := _resolve_executable(value)):
+            return resolved
+    seen: set[str] = set()
+    for candidate in _common_adb_candidates():
+        normalized = os.path.normcase(str(candidate))
+        if normalized in seen:
+            continue
+        seen.add(normalized)
+        if candidate.is_file():
+            return str(candidate.resolve())
+    raise ToolError(
+        "ADB was not found. Install Android Platform Tools or set TW_ADB to adb.exe, "
+        "then run this wizard again."
+    )
+
+
+def parse_adb_devices(output: str) -> tuple[AdbDevice, ...]:
+    devices: list[AdbDevice] = []
+    for raw_line in output.splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("List of devices attached") or line.startswith("*"):
+            continue
+        fields = line.split(maxsplit=2)
+        if len(fields) < 2:
+            continue
+        devices.append(
+            AdbDevice(
+                serial=fields[0],
+                state=fields[1],
+                details=fields[2] if len(fields) == 3 else "",
+            )
+        )
+    return tuple(devices)
+
+
+def _run_adb_host(adb_executable: str, arguments: Iterable[str]) -> subprocess.CompletedProcess[str]:
+    try:
+        return subprocess.run(
+            [adb_executable, *(str(value) for value in arguments)],
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            capture_output=True,
+            shell=False,
+            timeout=15,
+        )
+    except subprocess.TimeoutExpired as error:
+        raise ToolError("ADB device discovery timed out after 15 seconds") from error
+    except OSError as error:
+        raise ToolError(f"ADB could not start: {error}") from error
+
+
+def discover_adb_devices(adb_executable: str) -> tuple[AdbDevice, ...]:
+    result = _run_adb_host(adb_executable, ["devices", "-l"])
+    if result.returncode != 0:
+        message = result.stderr.strip() or result.stdout.strip()
+        raise ToolError(f"ADB device discovery failed ({result.returncode}): {message}")
+    return parse_adb_devices(result.stdout)
+
+
+def connect_adb_device(adb_executable: str, address: str) -> tuple[AdbDevice, ...]:
+    normalized = address.strip()
+    if not re.fullmatch(r"[A-Za-z0-9._:-]+", normalized):
+        raise ToolError("The ADB address contains unsupported characters")
+    result = _run_adb_host(adb_executable, ["connect", normalized])
+    if result.returncode != 0:
+        message = result.stderr.strip() or result.stdout.strip()
+        raise ToolError(f"ADB could not connect to {normalized}: {message}")
+    return discover_adb_devices(adb_executable)
+
+
+def _windows_drive_roots() -> tuple[Path, ...]:
+    if os.name != "nt":
+        return ()
+    try:
+        import ctypes
+
+        mask = int(ctypes.windll.kernel32.GetLogicalDrives())
+    except (AttributeError, OSError, ValueError):
+        return ()
+    return tuple(Path(f"{chr(ord('A') + index)}:\\") for index in range(26) if mask & (1 << index))
+
+
+def discover_local_xapks(extra_directories: Iterable[Path] = ()) -> tuple[Path, ...]:
+    configured = os.environ.get("TW_XAPK")
+    if configured:
+        configured_path = Path(os.path.expandvars(os.path.expanduser(configured.strip().strip('"'))))
+        if not configured_path.is_file():
+            raise ToolError(f"TW_XAPK points to a missing file: {configured_path}")
+        return (configured_path.resolve(),)
+    directories = [
+        *extra_directories,
+        Path.cwd(),
+        REPOSITORY_ROOT,
+        REPOSITORY_ROOT.parent,
+        Path.home() / "Downloads",
+        Path.home() / "Desktop",
+        *_windows_drive_roots(),
+    ]
+    found: dict[str, Path] = {}
+    seen_directories: set[str] = set()
+    for directory in directories:
+        try:
+            resolved_directory = directory.resolve()
+        except OSError:
+            continue
+        normalized_directory = os.path.normcase(str(resolved_directory))
+        if normalized_directory in seen_directories or not resolved_directory.is_dir():
+            continue
+        seen_directories.add(normalized_directory)
+        try:
+            entries = list(resolved_directory.iterdir())
+        except OSError:
+            continue
+        for entry in entries:
+            if entry.is_file() and entry.suffix.lower() == ".xapk":
+                found.setdefault(os.path.normcase(str(entry.resolve())), entry.resolve())
+    return tuple(sorted(found.values(), key=lambda path: (path.name.casefold(), str(path).casefold())))
+
+
+def _ask(prompt: str) -> str:
+    try:
+        return input(prompt)
+    except EOFError as error:
+        raise ToolError("Interactive input ended before a selection was made") from error
+
+
+def _choose_device(adb_executable: str) -> str:
+    devices = discover_adb_devices(adb_executable)
+    ready = [device for device in devices if device.state == "device"]
+    if not ready:
+        if devices:
+            states = ", ".join(f"{device.serial} ({device.state})" for device in devices)
+            raise ToolError(
+                f"No ready ADB device was found. Current devices: {states}. "
+                "Unlock/authorize or restart the MuMu ADB connection, then retry."
+            )
+        print("未发现 ADB 设备 / No ADB device is visible. 请启动 MuMu 并启用 ADB 调试。")
+        address = _ask("MuMu ADB 地址 / address (例如 127.0.0.1:16384；Enter 取消): ").strip()
+        if not address:
+            raise ToolError("No ADB device was selected")
+        devices = connect_adb_device(adb_executable, address)
+        ready = [device for device in devices if device.state == "device"]
+        if not ready:
+            states = ", ".join(f"{device.serial} ({device.state})" for device in devices) or "none"
+            raise ToolError(f"ADB connected but no ready device is available: {states}")
+    if len(ready) == 1:
+        print(f"已发现设备 / Detected device: {ready[0].serial} {ready[0].details}".rstrip())
+        return ready[0].serial
+    print("发现多台可用设备 / Multiple ready ADB devices were found:")
+    for index, device in enumerate(ready, 1):
+        print(f"  {index}. {device.serial} {device.details}".rstrip())
+    while True:
+        choice = _ask("选择目标设备编号 / Choose device number (Enter 取消): ").strip()
+        if not choice:
+            raise ToolError("No ADB device was selected")
+        if choice.isdecimal() and 1 <= int(choice) <= len(ready):
+            return ready[int(choice) - 1].serial
+        print(f"Enter a number from 1 to {len(ready)}.")
+
+
+def _choose_source(candidates: tuple[Path, ...]) -> tuple[str, Path | None]:
+    print("\nXAPK 来源 / source:")
+    print("  D. 下载已校验最新版 / Download verified latest (recommended)")
+    for index, candidate in enumerate(candidates, 1):
+        try:
+            size_mib = candidate.stat().st_size / (1024 * 1024)
+            size_text = f" ({size_mib:.1f} MiB)"
+        except OSError:
+            size_text = ""
+        print(f"  {index}. {candidate}{size_text}")
+    print("  P. 输入其他本地 XAPK 路径 / Enter another local path")
+    while True:
+        choice = _ask("选择 D、文件编号或 P / Choose D, number, or P [D]: ").strip()
+        if not choice or choice.casefold() == "d":
+            return "download", None
+        if choice.casefold() == "p":
+            raw_path = _ask("原版 XAPK 完整路径 / Full path: ").strip().strip('"')
+            path = Path(os.path.expandvars(os.path.expanduser(raw_path)))
+            if path.is_file() and path.suffix.lower() == ".xapk":
+                return "local", path.resolve()
+            print("That XAPK file does not exist. Try again.")
+            continue
+        if choice.isdecimal() and 1 <= int(choice) <= len(candidates):
+            return "local", candidates[int(choice) - 1]
+        print("Choose D, P, or one of the displayed file numbers.")
+
+
+def interactive_main() -> int:
+    print("Magia Exedra 台服原版客户端安装/升级 / Taiwan original-client installer/updater")
+    print("保留游戏数据、备份旧 APK，安装后默认不启动游戏。")
+    print("Preserves app data, backs up the installed APK set, and keeps the game stopped.\n")
+    adb_executable = find_adb_executable()
+    print(f"ADB: {adb_executable}")
+    serial = _choose_device(adb_executable)
+    source_mode, xapk_path = _choose_source(discover_local_xapks())
+    arguments = ["--adb", adb_executable, "--serial", serial]
+    source_label: str
+    if source_mode == "download":
+        arguments.append("--download-latest")
+        proxy = os.environ.get("TW_PROXY", "").strip()
+        if not proxy:
+            proxy = _ask("下载代理（可选；Enter 使用系统设置）/ Optional HTTP proxy: ").strip()
+        if proxy:
+            arguments.extend(["--proxy", proxy])
+        source_label = "verified latest release download"
+    else:
+        assert xapk_path is not None
+        arguments.extend(["--xapk", str(xapk_path)])
+        source_label = str(xapk_path)
+    optional_environment = {
+        "TW_RELEASE_MANIFEST": "--release-manifest",
+        "TW_DOWNLOAD_DIR": "--download-dir",
+        "TW_STATE_PARENT": "--state-parent",
+    }
+    for variable, option in optional_environment.items():
+        if os.environ.get(variable):
+            arguments.extend([option, os.environ[variable]])
+    print("\n准备就绪 / Ready:")
+    print(f"  设备 / Device: {serial}")
+    print(f"  来源 / Source: {source_label}")
+    print("  Existing game data: preserved（保留现有游戏数据）")
+    print("  Previous APK set: backed up when installed（升级前备份）")
+    print("  Launch after install: no")
+    confirmation = _ask("确认安装/升级 / Proceed? [y/N]: ").strip().casefold()
+    if confirmation not in {"y", "yes"}:
+        print("已取消；未修改应用包 / Cancelled; no package changes were made.")
+        return 0
+    result = main(arguments)
+    print("\n完成：已安装并验证原版台服客户端，游戏保持停止。")
+    print("Finished. The verified original Taiwan client is installed and remains stopped.")
+    return result
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Install or update the unmodified Magia Exedra Taiwan XAPK on MuMu/ADB"
@@ -1106,8 +1394,11 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    effective_argv = list(sys.argv[1:] if argv is None else argv)
+    if not effective_argv:
+        return interactive_main()
     parser = build_parser()
-    arguments = parser.parse_args(argv)
+    arguments = parser.parse_args(effective_argv)
     if not arguments.validate_only and not arguments.serial:
         parser.error("--serial is required for install/update")
     release_manifest = load_release_manifest(arguments.release_manifest)
@@ -1196,9 +1487,21 @@ def main(argv: list[str] | None = None) -> int:
     return 0
 
 
-if __name__ == "__main__":
+def run_entrypoint() -> int:
+    interactive = len(sys.argv) == 1
     try:
-        raise SystemExit(main())
+        return main()
+    except KeyboardInterrupt:
+        print("\nCancelled by user; the last completed checkpoint was preserved.", file=sys.stderr)
+        return 130
     except ToolError as error:
         print(f"ERROR: {error}", file=sys.stderr)
-        raise SystemExit(1)
+        return 1
+    finally:
+        if interactive:
+            with contextlib.suppress(EOFError, KeyboardInterrupt):
+                input("\n按 Enter 关闭 / Press Enter to close...")
+
+
+if __name__ == "__main__":
+    raise SystemExit(run_entrypoint())

@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "verifiedAt": "2026-08-02",
   "packageName": "tw.sonet.magiaexedra",
-  "source": "APKPure direct XAPK distribution",
+  "source": "Hash-pinned original XAPK mirrored in this repository's GitHub Releases",
   "latestVersion": "1.1.2",
-  "latestEndpoint": "https://d.apkpure.com/b/XAPK/tw.sonet.magiaexedra?version=latest",
+  "latestEndpoint": "https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/v1.1.2/tw.sonet.magiaexedra-1.1.2-26072717.xapk",
   "releases": [
     {
       "versionName": "1.1.2",

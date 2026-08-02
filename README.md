@@ -3,8 +3,10 @@
 Public, reproducible Python tools for the original Taiwan Android client and for
 future Taiwan resource, scenario, and video-data integration.
 
-This repository contains no APKs, account credentials, UUIDs, JWTs, sessions,
-cookies, private captures, or publisher assets.
+The Git source tree contains no APKs, account credentials, UUIDs, JWTs,
+sessions, cookies, or private captures. A hash-pinned copy of the original
+1.1.2 XAPK is provided as a GitHub Release asset so the wizard does not depend
+on a Taiwan-region Google Play account or a third-party download page.
 
 ## Original XAPK install/update on MuMu
 
@@ -13,6 +15,27 @@ Requirements:
 - Python 3.10 or newer;
 - Android Platform Tools (`adb`);
 - a running 64-bit MuMu instance with ADB debugging enabled.
+
+### Easiest path: double-click the Python wizard
+
+Double-click [`install_tw.py`](install_tw.py), or run it without arguments:
+
+```text
+python install_tw.py
+```
+
+The bilingual wizard finds `adb` from PATH, Android SDK, common MuMu install
+locations, or `TW_ADB`; discovers ready MuMu/ADB devices; and lists original
+XAPKs placed beside the tool, in the current directory, Downloads, Desktop, or
+the root of a Windows drive. It safely asks which device to use when more than
+one is connected. If no device is visible, it offers a manual MuMu ADB address.
+
+Choose the verified latest download or a discovered local XAPK, review the
+summary, and confirm once. The default always preserves app data, backs up the
+currently installed split APKs, and **keeps the game stopped**. Missing ADB,
+offline/unauthorized devices, invalid files, cancellation, and Ctrl+C are
+reported without silently selecting a different device. The window pauses at
+the end so a double-click user can read the result.
 
 The CLI accepts either a local original XAPK or downloads the release selected
 by [`manifests/known-releases.json`](manifests/known-releases.json). It validates
@@ -30,6 +53,7 @@ pass `--launch` explicitly when desired.
 - [English guide](docs/TW_MUMU_ORIGINAL_INSTALL.en.md)
 - [MIT license](LICENSE)
 - CLI: [`tools/tw_original_installer.py`](tools/tw_original_installer.py)
+- Double-click wizard: [`install_tw.py`](install_tw.py)
 - Release trust manifest: [`manifests/known-releases.json`](manifests/known-releases.json)
 
 Download, verify, install/update, and keep the game stopped:
@@ -99,20 +123,27 @@ rollback material exists—`rollback.py`. Rollback verifies version drift and
 backup hashes before changing the package. It is an APK-level rollback, not an
 application-data snapshot.
 
-## Planned Taiwan data pipeline
+## Taiwan data-pipeline status
 
 The installed game's initial on-demand cache is not a complete corpus. The
-planned public pipeline will obtain data from the authoritative Resource
+companion research pipeline now obtains data from the authoritative Resource
 catalog instead of treating the initial approximately 2 GB cache as complete.
+The current TW 1.1.2 verification recovered 6,268 Resource records and 14,386
+AssetBundle records, downloaded all 6,268 Resource files, and parsed all 2,780
+official `zh_TW` scenario JSON files with zero missing or failed entries. The
+remaining work is to turn the private-session bootstrap into a documented CI
+secret interface and publish the reusable downloader in the companion research
+repository.
 
-Planned stages:
+Pipeline stages:
 
-1. fetch and version the complete Taiwan Resource catalog;
-2. resolve every entry through the selected GCS or legacy transport;
+1. fetch and version the complete Taiwan Resource catalog (verified);
+2. resolve every entry through the selected GCS or legacy transport (verified
+   for the current legacy route);
 3. resume downloads and verify count, missing count, failure count, size, and
    SHA-256;
 4. decode the complete official `zh_TW` story/scenario JSON set for reader
-   integration;
+   integration (verified for TW 1.1.2);
 5. expose a stable scenario index and provenance report without private
    account/session material;
 6. add optional Taiwan video-manifest and media download support; and
@@ -131,9 +162,11 @@ Planned stages:
 
 ```text
 python -m unittest discover -s tests -v
-python -m compileall -q tools tests
+python -m compileall -q install_tw.py tools tests
 ```
 
-The suite covers fresh install, update, default no-launch behavior, rollback,
-manifest-driven latest selection, known/unknown release trust, strict XAPK
-identity, and bounded resumable downloads using loopback-only fixtures.
+The suite covers the no-argument wizard with a fake ADB device, multi-device
+selection, missing ADB, fresh install, update, default no-launch behavior,
+rollback, manifest-driven latest selection, known/unknown release trust,
+strict XAPK identity, and bounded resumable downloads using loopback-only
+fixtures. Tests never operate a real emulator.

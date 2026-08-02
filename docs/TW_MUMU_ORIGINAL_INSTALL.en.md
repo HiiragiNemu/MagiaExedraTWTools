@@ -13,7 +13,44 @@ steps.
 
 1. Install Python 3.10 or newer.
 2. Install `adb`, start a 64-bit MuMu instance, and enable ADB debugging.
-3. Confirm the target serial with `adb devices`.
+3. Have the original XAPK available, or let the wizard download the release
+   selected by the trust manifest.
+
+## Easiest method: double-click the Python wizard
+
+Double-click `install_tw.py` in the repository root, or run:
+
+```text
+python install_tw.py
+```
+
+No long command is required. The wizard automatically:
+
+1. finds `adb` through environment variables, PATH, Android SDK, and common
+   MuMu install locations;
+2. detects ready MuMu/ADB devices, auto-selects a sole device, and requires a
+   numbered choice when several are connected;
+3. finds `.xapk` files beside the tool, in the current directory, Downloads,
+   Desktop, and Windows drive roots;
+4. offers the verified latest download or a discovered local original XAPK;
+5. displays the device, source, data-preservation, backup, and no-launch choices
+   before one final confirmation.
+
+If no device is visible, enter the MuMu ADB address, for example
+`127.0.0.1:16384`. Missing ADB, offline/unauthorized devices, and multiple
+devices are reported explicitly; the wizard never silently chooses a different
+target. Cancellation, closed input, and Ctrl+C preserve completed checkpoints.
+After a double-click run, the window waits for Enter so the result remains
+readable.
+
+Defaults are always: preserve game data with `-r`, back up the installed APK
+set before updating, and keep the game stopped. Use the advanced command below
+with an explicit `--launch` only when you want it started.
+
+If automatic discovery misses `adb.exe`, set `TW_ADB` to its full path. If the
+XAPK is elsewhere, choose `P` in the wizard and paste its full path.
+
+## Advanced command-line use
 
 ## Download the latest release and install/update
 
@@ -114,7 +151,12 @@ cannot read. It stops on version drift. Do not use
 
 ## Troubleshooting
 
-- **Device offline:** run `adb connect HOST:ADB_PORT`, then inspect `adb devices`.
+- **ADB not found:** install Android Platform Tools or point `TW_ADB` to
+  `adb.exe`, then reopen the wizard.
+- **Device offline:** restart MuMu ADB debugging; if discovery stays empty,
+  enter `HOST:ADB_PORT` in the wizard.
+- **Several devices:** the wizard lists serials and models and requires a
+  numbered choice; it does not default to the first one.
 - **File validation fails:** do not mix versions or architectures; obtain the
   complete XAPK corresponding to the trust manifest.
 - **Manifest still selects an older release:** verify the new artifacts, add the
