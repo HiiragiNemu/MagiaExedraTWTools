@@ -158,13 +158,20 @@ elif args and args[0] == "install-multiple":
         state["versionName"] = state["targetVersionName"]
         state["versionCode"] = state["targetVersionCode"]
     state["installer"] = args[args.index("-i") + 1] if "-i" in args else None
+    state["processRunning"] = True
     save(); print("Success")
+elif args == ["shell", "am", "force-stop", "tw.sonet.magiaexedra"]:
+    state["processRunning"] = False; save()
 elif args == ["uninstall", "tw.sonet.magiaexedra"]:
     state["installed"] = False; state["installer"] = None; save(); print("Success")
 elif args[:2] == ["shell", "monkey"]:
+    state["processRunning"] = True; save()
     print("Events injected: 1")
 elif args[:3] == ["shell", "pidof", "tw.sonet.magiaexedra"]:
-    print("1234")
+    if state.get("processRunning"):
+        print("1234")
+    else:
+        raise SystemExit(1)
 elif args[:4] == ["shell", "dumpsys", "activity", "activities"]:
     print("mResumedActivity: tw.sonet.magiaexedra/.MainActivity")
 else:
@@ -379,6 +386,10 @@ class TwInstallerCliTest(unittest.TestCase):
             install = next(call for call in calls if call[:1] == ["install-multiple"])
             self.assertEqual(install[1:4], ["-r", "-i", "com.android.vending"])
             self.assertFalse(any(call[:2] == ["shell", "monkey"] for call in calls))
+            self.assertIn(
+                ["shell", "am", "force-stop", "tw.sonet.magiaexedra"], calls
+            )
+            self.assertIn(["shell", "pidof", "tw.sonet.magiaexedra"], calls)
             final_state = json.loads(state_path.read_text(encoding="utf-8"))
             self.assertEqual(final_state["versionName"], "1.1.2")
             self.assertTrue(final_state["installed"])
@@ -391,8 +402,15 @@ class TwInstallerCliTest(unittest.TestCase):
             evidence = json.loads((checkpoint / "verification.json").read_text(encoding="utf-8"))
             self.assertEqual(evidence["mode"], "fresh-install")
             self.assertFalse(evidence["launch"]["attempted"])
+            self.assertTrue(evidence["launch"]["forcedStopped"])
+            self.assertTrue(evidence["launch"]["stoppedVerified"])
+            self.assertFalse(evidence["launch"]["processAlive"])
             self.assertTrue(state["installed"])
             self.assertFalse(any(call[:2] == ["shell", "monkey"] for call in calls))
+            self.assertIn(
+                ["shell", "am", "force-stop", "tw.sonet.magiaexedra"], calls
+            )
+            self.assertIn(["shell", "pidof", "tw.sonet.magiaexedra"], calls)
 
             environment = os.environ.copy()
             environment.update(
@@ -420,6 +438,10 @@ class TwInstallerCliTest(unittest.TestCase):
             install = next(call for call in calls if call[:1] == ["install-multiple"])
             self.assertEqual(install[1:4], ["-r", "-i", "com.android.vending"])
             self.assertFalse(any(call[:2] == ["shell", "monkey"] for call in calls))
+            self.assertIn(
+                ["shell", "am", "force-stop", "tw.sonet.magiaexedra"], calls
+            )
+            self.assertIn(["shell", "pidof", "tw.sonet.magiaexedra"], calls)
 
             environment = os.environ.copy()
             environment.update(
@@ -439,6 +461,30 @@ class TwInstallerCliTest(unittest.TestCase):
             self.assertTrue(restored["installed"])
             self.assertEqual(restored["versionName"], "1.0.5")
             self.assertIsNone(restored["installer"])
+
+    def test_explicit_launch_occurs_after_install_verification_without_force_stop(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            result, checkpoint, state, calls = _run_cli(
+                root,
+                installed=False,
+                extra_arguments=("--launch", "--launch-wait", "0"),
+            )
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            evidence = json.loads((checkpoint / "verification.json").read_text(encoding="utf-8"))
+            self.assertTrue(evidence["launch"]["attempted"])
+            self.assertTrue(evidence["launch"]["processAlive"])
+            self.assertFalse(any(call[:3] == ["shell", "am", "force-stop"] for call in calls))
+            install_index = next(index for index, call in enumerate(calls) if call[:1] == ["install-multiple"])
+            verify_index = next(
+                index
+                for index, call in enumerate(calls)
+                if index > install_index and call[:3] == ["shell", "dumpsys", "package"]
+            )
+            launch_index = next(index for index, call in enumerate(calls) if call[:2] == ["shell", "monkey"])
+            self.assertLess(install_index, verify_index)
+            self.assertLess(verify_index, launch_index)
+            self.assertTrue(state["processRunning"])
 
     def test_explicit_backup_skip_never_claims_runnable_update_rollback(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

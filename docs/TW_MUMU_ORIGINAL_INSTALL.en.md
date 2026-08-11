@@ -44,8 +44,14 @@ After a double-click run, the window waits for Enter so the result remains
 readable.
 
 Defaults are always: preserve game data with `-r`, back up the installed APK
-set before updating, and keep the game stopped. Use the advanced command below
-with an explicit `--launch` only when you want it started.
+set before updating, explicitly run `am force-stop`, and use `pidof` to verify
+that no game process remains. Use the advanced command below with an explicit
+`--launch` only when you want it started; launch then occurs after the package,
+version, split, and installer checks pass.
+
+Downloads are **direct by default**. An empty proxy prompt becomes `None` and
+disables inherited operating-system and environment proxies. A proxy is used
+only when you enter one explicitly or pass `--proxy`.
 
 If automatic discovery misses `adb.exe`, set `TW_ADB` to its full path. If the
 XAPK is elsewhere, choose `P` in the wizard and paste its full path.
@@ -58,12 +64,17 @@ XAPK is elsewhere, choose `P` in the wizard and paste its full path.
 python tools/tw_original_installer.py --download-latest --serial HOST:ADB_PORT
 ```
 
-An optional proxy applies only to the XAPK download. It does not change MuMu
-Wi-Fi, the system proxy, or ADB reverse rules:
+An optional explicit proxy applies only to the XAPK download. It does not
+change MuMu Wi-Fi, the system proxy, or ADB reverse rules. Omitting `--proxy`
+is direct; replace the port placeholder below when needed:
 
 ```text
-python tools/tw_original_installer.py --download-latest --proxy http://PROXY_HOST:PROXY_PORT --serial HOST:ADB_PORT
+python tools/tw_original_installer.py --download-latest --proxy http://127.0.0.1:<YOUR_PROXY_PORT> --serial HOST:ADB_PORT
 ```
+
+For Android 11+ installation entirely on one phone, without a computer, see
+the [Android phone-only guide](TW_ANDROID_PHONE_INSTALL.en.md). It documents
+both the Shizuku GUI route and the hash-enforcing Termux route.
 
 Downloads use a `.part` file, HTTP Range, a strong ETag or Last-Modified
 validator, strict range and length checks, a four-GiB streaming ceiling,
@@ -121,8 +132,11 @@ It rejects missing, duplicate, or extra splits, the wrong package, mixed
 versions, suspicious compression, and encrypted APK entries. Fresh install and
 old-version update both use atomic
 `adb install-multiple -r -i com.android.vending`; `-r` preserves app data. If
-adbd initially runs as root, it is temporarily unrooted and its prior state is
-restored afterward.
+launch was not requested, the tool then force-stops the package and verifies
+with `pidof` that no game process remains. With explicit `--launch`, it validates
+the installed package first and starts the game afterward. If adbd initially
+runs as root, it is temporarily unrooted and its prior state is restored
+afterward.
 
 ## Evidence and rollback
 
@@ -134,7 +148,8 @@ area and contains:
 - `previous-apks/` plus `previous-apks.json`: complete pre-update APK backup;
 - `adb-operations.jsonl`: ADB evidence without game-account material;
 - `journal.json`: operation stage;
-- `verification.json`: final version, installer, splits, and launch choice;
+- `verification.json`: final version, installer, splits, and either verified
+  stopped state or explicit-launch result;
 - `rollback.py`: generated when complete rollback material exists.
 
 Run from that state directory:
