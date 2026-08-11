@@ -8,7 +8,7 @@
 1. 安装 Python 3.10 或更新版本与 Android Platform Tools。
 2. 启动 64 位 MuMu，开启 ADB 调试，暂时关闭游戏。
 3. 从 [最新工具 Release](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/latest)
-   下载并解压 `MagiaExedraTWInstaller-*.zip`（发行名称可能随版本更新）。
+   下载并解压 `MagiaExedraTWTools-v*.zip`（版本号会随发布更新）。
 4. 可让向导在线下载已固定哈希的 XAPK；为缩短录制，也可提前下载同一
    Release 中的原版 XAPK，放在工具目录旁。
 5. 隐藏 Google 邮箱、玩家 ID、引继码、密码、代理订阅与个人目录用户名。
@@ -37,7 +37,7 @@
 展示 Release 中的工具 ZIP 和原版 XAPK，然后运行：
 
 ```text
-certutil -hashfile MagiaExedraTWInstaller-当前版本.zip SHA256
+certutil -hashfile MagiaExedraTWTools-v当前版本.zip SHA256
 certutil -hashfile tw.sonet.magiaexedra-1.1.2-26072717.xapk SHA256
 ```
 
