@@ -35,8 +35,13 @@ python install_tw.py
 明确提示，不会静默选错设备。取消、关闭输入或按 Ctrl+C 时会保留已经完成的
 检查点。双击运行时，结束后窗口会等待按 Enter，便于阅读结果。
 
-默认行为始终是：使用 `-r` 保留游戏数据、升级前备份原 APK、安装完成后不
-启动游戏。需要启动时仍应使用下面的高级命令并显式添加 `--launch`。
+默认行为始终是：使用 `-r` 保留游戏数据、升级前备份原 APK、安装完成后执行
+`am force-stop`，并通过 `pidof` 验证游戏进程不存在。需要启动时仍应使用下面的
+高级命令并显式添加 `--launch`；它只会在安装包、版本、split 和来源全部验证后
+启动。
+
+下载默认**直连**。代理提示留空会传入 `None`，并禁用操作系统及环境变量中
+继承的代理；只有明确填写代理 URL 或使用 `--proxy` 时才经过该代理。
 
 如果自动查找不到 `adb.exe`，可设置 `TW_ADB` 指向它；如果 XAPK 不在常用
 位置，可在向导中选择 `P` 后粘贴完整路径。
@@ -49,11 +54,15 @@ python install_tw.py
 python tools/tw_original_installer.py --download-latest --serial HOST:ADB_PORT
 ```
 
-可选代理只用于 XAPK 下载，不会修改 MuMu Wi-Fi、系统代理或 ADB reverse：
+可选代理只用于 XAPK 下载，不会修改 MuMu Wi-Fi、系统代理或 ADB reverse。
+省略 `--proxy` 即直连；需要时替换下面的端口占位符：
 
 ```text
-python tools/tw_original_installer.py --download-latest --proxy http://PROXY_HOST:PROXY_PORT --serial HOST:ADB_PORT
+python tools/tw_original_installer.py --download-latest --proxy http://127.0.0.1:<YOUR_PROXY_PORT> --serial HOST:ADB_PORT
 ```
+
+只使用一台 Android 11+ 手机、无需电脑的 Shizuku 图形流程和 Termux 强校验
+流程参见 [Android 手机单机安装说明](TW_ANDROID_PHONE_INSTALL.zh-CN.md)。
 
 下载使用 `.part`、HTTP Range、强 ETag/Last-Modified、严格区间和长度检查、
 四 GiB 流式上限、SHA-256 及原子改名。中断后重新执行同一命令即可续传。
@@ -107,7 +116,9 @@ splits: base + base_assets + config.arm64_v8a
 它拒绝缺失、重复、额外 split、错误 package、混合版本、异常压缩和加密 APK。
 首次安装和旧版升级都通过
 `adb install-multiple -r -i com.android.vending` 原子执行；`-r` 保留应用数据。
-若 adbd 原先为 root，工具安装前临时 `unroot`，结束后恢复原状态。
+默认不启动时，工具随后显式 `force-stop` 并以 `pidof` 验证游戏进程不存在；
+显式 `--launch` 则先完成安装验收，再启动游戏。若 adbd 原先为 root，工具安装前
+临时 `unroot`，结束后恢复原状态。
 
 ## 证据与回滚
 
@@ -118,7 +129,7 @@ splits: base + base_assets + config.arm64_v8a
 - `previous-apks/` 与 `previous-apks.json`：升级前完整 APK 备份；
 - `adb-operations.jsonl`：不含游戏账号资料的 ADB 证据；
 - `journal.json`：操作阶段；
-- `verification.json`：最终版本、安装来源、split 和启动选择；
+- `verification.json`：最终版本、安装来源、split，以及默认停止验收或显式启动结果；
 - `rollback.py`：回滚材料完整时生成。
 
 在状态目录运行：

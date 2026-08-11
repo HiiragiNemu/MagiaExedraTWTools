@@ -536,9 +536,14 @@ def extract_and_validate_xapk(xapk_path: Path, destination: Path) -> XapkIdentit
 
 
 def _build_opener(proxy: str | None) -> urllib.request.OpenerDirector:
+    # The public installer is direct-by-default.  Passing no proxy must not
+    # silently inherit HTTP(S)_PROXY or the operating-system proxy settings.
+    # A proxy is used only when the caller supplies one explicitly.
     handlers: list[Any] = []
     if proxy:
         handlers.append(urllib.request.ProxyHandler({"http": proxy, "https": proxy}))
+    else:
+        handlers.append(urllib.request.ProxyHandler({}))
     return urllib.request.build_opener(*handlers)
 
 
@@ -956,6 +961,22 @@ def launch_and_verify(adb: AdbRunner, wait_seconds: float) -> dict[str, Any]:
     return {"attempted": True, "processAlive": process_alive, "resumedActivity": resumed}
 
 
+def force_stop_and_verify(adb: AdbRunner) -> dict[str, Any]:
+    """Force-stop the installed package and verify that no process remains."""
+    adb.run(["shell", "am", "force-stop", PACKAGE_NAME])
+    pid_result = adb.run(["shell", "pidof", PACKAGE_NAME], check=False)
+    process_alive = pid_result.returncode == 0 and bool(pid_result.stdout.strip())
+    if process_alive:
+        raise ToolError(f"{PACKAGE_NAME} is still running after force-stop: {pid_result.stdout.strip()}")
+    return {
+        "attempted": False,
+        "processAlive": False,
+        "resumedActivity": None,
+        "forcedStopped": True,
+        "stoppedVerified": True,
+    }
+
+
 def install_xapk(
     xapk: XapkIdentity,
     state_directory: Path,
@@ -1021,15 +1042,22 @@ def install_xapk(
             raise ToolError(f"Package Installer did not report Success: {result.stdout.strip()}")
         journal("install-committed")
 
+        # The default contract is stronger than merely omitting a launch call:
+        # explicitly stop the package and prove that pidof reports no process.
+        # An explicit --launch instead defers launch until package verification.
+        launch_record: dict[str, Any] | None = None
+        if not launch:
+            launch_record = force_stop_and_verify(adb)
+
         if switched_from_root and restore_root:
             adb.run(["root"])
             adb.run(["wait-for-device"])
             root_restored = True
         after = package_snapshot(adb)
         verify_installed_snapshot(after, xapk)
-        launch_record = {"attempted": False, "processAlive": None, "resumedActivity": None}
         if launch:
             launch_record = launch_and_verify(adb, launch_wait)
+        assert launch_record is not None
         verification = {
             "verifiedAt": utc_now(),
             "status": "verified",
@@ -1326,7 +1354,7 @@ def interactive_main() -> int:
         arguments.append("--download-latest")
         proxy = os.environ.get("TW_PROXY", "").strip()
         if not proxy:
-            proxy = _ask("下载代理（可选；Enter 使用系统设置）/ Optional HTTP proxy: ").strip()
+            proxy = _ask("下载代理（可选；Enter 直连）/ Optional HTTP proxy (Enter for direct): ").strip()
         if proxy:
             arguments.extend(["--proxy", proxy])
         source_label = "verified latest release download"
@@ -1371,7 +1399,10 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--serial", help="ADB serial (required unless --validate-only)")
     parser.add_argument("--adb", default="adb", help="adb executable or path")
-    parser.add_argument("--proxy", help="optional HTTP/HTTPS proxy URL used only for XAPK download")
+    parser.add_argument(
+        "--proxy",
+        help="explicit HTTP/HTTPS proxy used only for XAPK download; omitted means direct",
+    )
     parser.add_argument("--download-dir", type=Path, help="download cache directory")
     parser.add_argument("--download-url", help=argparse.SUPPRESS)
     parser.add_argument(
