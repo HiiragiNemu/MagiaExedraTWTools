@@ -29,6 +29,12 @@ after confirmation. Downloads are direct by default. An optional proxy is used
 only when the operator explicitly enters one; no machine-specific proxy is
 embedded in the tool.
 
+Before downloading the pinned client, the wizard refreshes the release manifest
+from this repository's `main` branch. If GitHub is temporarily unreachable it
+uses the bundled hash-pinned manifest, so an existing installer archive remains
+usable offline. Neither route changes Windows, emulator, VPN, DNS, WinHTTP, or
+WinINET proxy settings.
+
 The install operation is equivalent to:
 
 ```text
@@ -74,6 +80,22 @@ Current pinned original client:
 - version: `1.1.2` (`26072717`)
 - XAPK SHA-256:
   `664dfbc307c5f6b640d01b1fc661de02fa30fc382a68426530abc657dc9e2d14`
+
+Check the online release manifest without ADB or an XAPK download:
+
+```text
+py -3 tools/tw_original_installer.py --check-release
+```
+
+Download, verify, and install the selected release non-interactively:
+
+```text
+py -3 tools/tw_original_installer.py --download-latest --serial YOUR_ADB_SERIAL
+```
+
+Use `--no-refresh-release-manifest` only when deliberately operating from the
+bundled manifest. In-game asset downloads shown after launch are separate from
+the Android XAPK version and do not by themselves mean the installer is stale.
 
 ## Update safety and rollback
 

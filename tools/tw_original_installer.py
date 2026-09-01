@@ -36,6 +36,10 @@ PACKAGE_NAME = "tw.sonet.magiaexedra"
 INSTALLER_PACKAGE = "com.android.vending"
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_RELEASE_MANIFEST = REPOSITORY_ROOT / "manifests" / "known-releases.json"
+DEFAULT_REMOTE_RELEASE_MANIFEST_URL = (
+    "https://raw.githubusercontent.com/HiiragiNemu/MagiaExedraTWTools/"
+    "main/manifests/known-releases.json"
+)
 ROLE_FILENAMES = {
     "": "base.apk",
     "base_assets": "split_base_assets.apk",
@@ -165,14 +169,7 @@ def _positive_bounded_length(value: Any, label: str, maximum: int) -> int:
     return value
 
 
-def load_release_manifest(path: Path = DEFAULT_RELEASE_MANIFEST) -> ReleaseManifest:
-    try:
-        with path.open("r", encoding="utf-8") as handle:
-            data = json.load(handle)
-    except FileNotFoundError as error:
-        raise ToolError(f"Release manifest not found: {path}") from error
-    except (OSError, json.JSONDecodeError) as error:
-        raise ToolError(f"Release manifest is unreadable: {error}") from error
+def parse_release_manifest(data: Any, source: str) -> ReleaseManifest:
     if not isinstance(data, dict) or data.get("schemaVersion") != 1:
         raise ToolError("Release manifest schemaVersion must be 1")
     if data.get("packageName") != PACKAGE_NAME:
@@ -229,7 +226,99 @@ def load_release_manifest(path: Path = DEFAULT_RELEASE_MANIFEST) -> ReleaseManif
         releases[version_name] = ReleasePin(version_name, version_code, xapk_pin, splits)
     if latest_version not in releases:
         raise ToolError("Release manifest latestVersion does not identify a listed release")
-    return ReleaseManifest(str(path.resolve()), latest_version, latest_endpoint, releases)
+    return ReleaseManifest(source, latest_version, latest_endpoint, releases)
+
+
+def load_release_manifest(path: Path = DEFAULT_RELEASE_MANIFEST) -> ReleaseManifest:
+    try:
+        with path.open("r", encoding="utf-8") as handle:
+            data = json.load(handle)
+    except FileNotFoundError as error:
+        raise ToolError(f"Release manifest not found: {path}") from error
+    except (OSError, json.JSONDecodeError) as error:
+        raise ToolError(f"Release manifest is unreadable: {error}") from error
+    return parse_release_manifest(data, str(path.resolve()))
+
+
+def fetch_remote_release_manifest(url: str, *, proxy: str | None = None) -> ReleaseManifest:
+    parsed = urllib.parse.urlsplit(url)
+    loopback_http = parsed.scheme == "http" and parsed.hostname in {"127.0.0.1", "::1", "localhost"}
+    if (
+        (parsed.scheme != "https" and not loopback_http)
+        or not parsed.hostname
+        or parsed.username
+        or parsed.password
+    ):
+        raise ToolError("Remote release manifest must use credential-free HTTPS")
+    request = urllib.request.Request(
+        url,
+        headers={"Accept": "application/json", "User-Agent": "MagiaExedraTWTools/1"},
+    )
+    try:
+        with _build_opener(proxy).open(request, timeout=30) as response:
+            content_length = response.headers.get("Content-Length")
+            if content_length:
+                _positive_bounded_length(
+                    int(content_length), "Remote release manifest Content-Length", MAX_MANIFEST_BYTES
+                )
+            payload = response.read(MAX_MANIFEST_BYTES + 1)
+    except (OSError, ValueError, urllib.error.URLError, urllib.error.HTTPError) as error:
+        raise ToolError(f"Remote release manifest fetch failed: {error}") from error
+    if len(payload) > MAX_MANIFEST_BYTES:
+        raise ToolError(f"Remote release manifest exceeds {MAX_MANIFEST_BYTES} bytes")
+    try:
+        data = json.loads(payload.decode("utf-8-sig"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise ToolError(f"Remote release manifest is unreadable: {error}") from error
+    return parse_release_manifest(data, url)
+
+
+def _manifest_summary(manifest: ReleaseManifest) -> dict[str, Any]:
+    return {
+        "source": manifest.path,
+        "latestVersion": manifest.latest.version_name,
+        "versionCode": int(manifest.latest.version_code),
+    }
+
+
+def select_release_manifest(
+    path: Path,
+    *,
+    refresh: bool,
+    remote_url: str = DEFAULT_REMOTE_RELEASE_MANIFEST_URL,
+    proxy: str | None = None,
+) -> tuple[ReleaseManifest, dict[str, Any]]:
+    bundled = load_release_manifest(path)
+    report: dict[str, Any] = {
+        "attempted": False,
+        "status": "local-manifest",
+        "bundled": _manifest_summary(bundled),
+        "remote": None,
+        "selected": _manifest_summary(bundled),
+        "error": None,
+    }
+    custom_manifest = path.resolve() != DEFAULT_RELEASE_MANIFEST.resolve()
+    explicit_remote_override = remote_url != DEFAULT_REMOTE_RELEASE_MANIFEST_URL
+    if not refresh:
+        report["status"] = "refresh-disabled"
+        return bundled, report
+    if custom_manifest and not explicit_remote_override:
+        report["status"] = "custom-local-manifest"
+        return bundled, report
+    report["attempted"] = True
+    try:
+        remote = fetch_remote_release_manifest(remote_url, proxy=proxy)
+    except ToolError as error:
+        report["status"] = "remote-fallback"
+        report["error"] = str(error)
+        return bundled, report
+    report["remote"] = _manifest_summary(remote)
+    if int(remote.latest.version_code) < int(bundled.latest.version_code):
+        report["status"] = "remote-older"
+        return bundled, report
+    report["status"] = "remote-selected"
+    report["selected"] = _manifest_summary(remote)
+    return remote, report
 
 
 def enforce_xapk_trust(
@@ -1397,14 +1486,29 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="download the release selected by manifests/known-releases.json",
     )
-    parser.add_argument("--serial", help="ADB serial (required unless --validate-only)")
+    source.add_argument(
+        "--check-release",
+        action="store_true",
+        help="refresh and report the selected release without downloading or using ADB",
+    )
+    parser.add_argument("--serial", help="ADB serial (required for install/update)")
     parser.add_argument("--adb", default="adb", help="adb executable or path")
     parser.add_argument(
         "--proxy",
-        help="explicit HTTP/HTTPS proxy used only for XAPK download; omitted means direct",
+        help="explicit HTTP/HTTPS proxy used only for manifest/XAPK download; omitted means direct",
     )
     parser.add_argument("--download-dir", type=Path, help="download cache directory")
     parser.add_argument("--download-url", help=argparse.SUPPRESS)
+    parser.add_argument(
+        "--remote-release-manifest-url",
+        default=DEFAULT_REMOTE_RELEASE_MANIFEST_URL,
+        help=argparse.SUPPRESS,
+    )
+    parser.add_argument(
+        "--no-refresh-release-manifest",
+        action="store_true",
+        help="use only the bundled/local release manifest",
+    )
     parser.add_argument(
         "--release-manifest",
         type=Path,
@@ -1430,9 +1534,29 @@ def main(argv: list[str] | None = None) -> int:
         return interactive_main()
     parser = build_parser()
     arguments = parser.parse_args(effective_argv)
-    if not arguments.validate_only and not arguments.serial:
+    if not arguments.validate_only and not arguments.check_release and not arguments.serial:
         parser.error("--serial is required for install/update")
-    release_manifest = load_release_manifest(arguments.release_manifest)
+    release_manifest, manifest_refresh = select_release_manifest(
+        arguments.release_manifest,
+        refresh=(arguments.download_latest or arguments.check_release)
+        and not arguments.no_refresh_release_manifest,
+        remote_url=arguments.remote_release_manifest_url,
+        proxy=arguments.proxy,
+    )
+    if arguments.check_release:
+        print(
+            json.dumps(
+                {
+                    "status": "release-checked",
+                    "releaseManifestRefresh": manifest_refresh,
+                    "selectedRelease": _manifest_summary(release_manifest),
+                },
+                ensure_ascii=False,
+                indent=2,
+                sort_keys=True,
+            )
+        )
+        return 0
     expected_hash = (
         normalize_sha256(arguments.expected_xapk_sha256, "--expected-xapk-sha256")
         if arguments.expected_xapk_sha256
@@ -1472,6 +1596,7 @@ def main(argv: list[str] | None = None) -> int:
         output = {
             "status": "validated",
             "releaseManifest": release_manifest.path,
+            "releaseManifestRefresh": manifest_refresh,
             "trust": {
                 "knownRelease": trusted_release.version_name if trusted_release else None,
                 "externalSha256": expected_hash if trusted_release is None else None,
@@ -1494,6 +1619,7 @@ def main(argv: list[str] | None = None) -> int:
         )
         input_record: dict[str, Any] = {
             "releaseManifest": release_manifest.path,
+            "releaseManifestRefresh": manifest_refresh,
             "trustedKnownRelease": trusted_release.version_name if trusted_release else None,
             "externalSha256": expected_hash if trusted_release is None else None,
             "xapk": dataclasses.asdict(identity),

@@ -550,6 +550,74 @@ class TwInstallerCliTest(unittest.TestCase):
                 server.server_close()
                 thread.join(timeout=5)
 
+    def test_remote_newer_release_manifest_is_selected(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            bundled_xapk = root / "bundled.xapk"
+            remote_xapk = root / "remote.xapk"
+            _write_xapk(bundled_xapk, version_name="1.1.2", version_code="26072717")
+            _write_xapk(remote_xapk, version_name="1.2.0", version_code="26090000")
+            bundled_manifest = root / "bundled.json"
+            remote_manifest = root / "remote.json"
+            _write_release_manifest(bundled_manifest, bundled_xapk)
+            _write_release_manifest(remote_manifest, remote_xapk)
+            _RangeHandler.payload = remote_manifest.read_bytes()
+            _RangeHandler.ranges = []
+            _RangeHandler.send_content_length = True
+            server = ThreadingHTTPServer(("127.0.0.1", 0), _RangeHandler)
+            thread = threading.Thread(target=server.serve_forever, daemon=True)
+            thread.start()
+            try:
+                selected, report = installer.select_release_manifest(
+                    bundled_manifest,
+                    refresh=True,
+                    remote_url=f"http://127.0.0.1:{server.server_port}/known-releases.json",
+                )
+                self.assertEqual(selected.latest_version, "1.2.0")
+                self.assertEqual(report["status"], "remote-selected")
+                self.assertEqual(report["selected"]["versionCode"], 26090000)
+            finally:
+                server.shutdown()
+                server.server_close()
+                thread.join(timeout=5)
+
+    def test_remote_manifest_failure_falls_back_to_bundled(self) -> None:
+        bundled = installer.load_release_manifest()
+        with mock.patch.object(
+            installer,
+            "fetch_remote_release_manifest",
+            side_effect=installer.ToolError("offline fixture"),
+        ):
+            selected, report = installer.select_release_manifest(
+                installer.DEFAULT_RELEASE_MANIFEST,
+                refresh=True,
+            )
+        self.assertEqual(selected, bundled)
+        self.assertEqual(report["status"], "remote-fallback")
+        self.assertIn("offline fixture", report["error"])
+
+    def test_check_release_reports_json_without_adb_or_xapk_download(self) -> None:
+        output = io.StringIO()
+        with mock.patch.object(
+            installer,
+            "fetch_remote_release_manifest",
+            return_value=installer.load_release_manifest(),
+        ), mock.patch.object(
+            installer,
+            "install_xapk",
+            side_effect=AssertionError("ADB must not run"),
+        ), mock.patch.object(
+            installer,
+            "download_file",
+            side_effect=AssertionError("XAPK must not download"),
+        ), contextlib.redirect_stdout(output):
+            exit_code = installer.main(["--check-release"])
+        self.assertEqual(exit_code, 0)
+        report = json.loads(output.getvalue())
+        self.assertEqual(report["status"], "release-checked")
+        self.assertEqual(report["releaseManifestRefresh"]["status"], "remote-selected")
+        self.assertEqual(report["selectedRelease"]["latestVersion"], "1.1.2")
+
     def test_known_release_manifest_matches_pinned_latest(self) -> None:
         raw = json.loads((ROOT / "manifests" / "known-releases.json").read_text(encoding="utf-8"))
         manifest = installer.load_release_manifest()
