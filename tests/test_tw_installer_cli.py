@@ -195,10 +195,12 @@ else:
 
 
 def _run_cli(
-    root: Path, installed: bool, extra_arguments: tuple[str, ...] = ()
+    root: Path, installed: bool, extra_arguments: tuple[str, ...] = (),
+    target_version: tuple[str, str] = ("1.1.2", "26072717"),
+    previous_version: tuple[str, str] = ("1.0.5", "26032510"),
 ) -> tuple[subprocess.CompletedProcess[str], Path, dict, list[list[str]]]:
     xapk = root / "client.xapk"
-    _write_xapk(xapk)
+    _write_xapk(xapk, version_name=target_version[0], version_code=target_version[1])
     release_manifest = root / "known-releases.json"
     _write_release_manifest(release_manifest, xapk)
     adb = _write_fake_adb(root)
@@ -208,12 +210,12 @@ def _run_cli(
         "uid": "0",
         "installed": installed,
         "installer": None,
-        "versionName": "1.0.5" if installed else None,
-        "versionCode": "26032510" if installed else None,
-        "previousVersionName": "1.0.5",
-        "previousVersionCode": "26032510",
-        "targetVersionName": "1.1.2",
-        "targetVersionCode": "26072717",
+        "versionName": previous_version[0] if installed else None,
+        "versionCode": previous_version[1] if installed else None,
+        "previousVersionName": previous_version[0],
+        "previousVersionCode": previous_version[1],
+        "targetVersionName": target_version[0],
+        "targetVersionCode": target_version[1],
     }
     state_path.write_text(json.dumps(state), encoding="utf-8")
     environment = os.environ.copy()
@@ -462,6 +464,34 @@ class TwInstallerCliTest(unittest.TestCase):
             self.assertEqual(restored["versionName"], "1.0.5")
             self.assertIsNone(restored["installer"])
 
+    def test_113_fresh_install_and_112_upgrade_preserve_source_and_rollback(self) -> None:
+        for installed in (False, True):
+            with self.subTest(installed=installed), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                result, checkpoint, state, calls = _run_cli(
+                    root, installed=installed, target_version=("1.1.3", "26082020"),
+                    previous_version=("1.1.2", "26072717"),
+                )
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertEqual(state["versionName"], "1.1.3")
+                install = next(call for call in calls if call[:1] == ["install-multiple"])
+                self.assertEqual(install[1:4], ["-r", "-i", "com.android.vending"])
+                self.assertFalse(any(call[:1] == ["uninstall"] for call in calls))
+                self.assertFalse(any(call[:2] in (["shell", "monkey"], ["shell", "settings"]) for call in calls))
+                evidence = json.loads((checkpoint / "verification.json").read_text(encoding="utf-8"))
+                self.assertTrue(evidence["launch"]["stoppedVerified"])
+                environment = os.environ.copy()
+                environment.update(FAKE_ADB_STATE=str(root / "device-state.json"), FAKE_ADB_LOG=str(root / "adb.log"))
+                rollback = subprocess.run(
+                    [sys.executable, str(checkpoint / "rollback.py"), "--adb", str(root / ("adb.cmd" if os.name == "nt" else "adb"))],
+                    capture_output=True, text=True, encoding="utf-8", errors="replace", env=environment,
+                )
+                self.assertEqual(rollback.returncode, 0, rollback.stdout + rollback.stderr)
+                restored = json.loads((root / "device-state.json").read_text(encoding="utf-8"))
+                self.assertEqual(restored["installed"], installed)
+                if installed:
+                    self.assertEqual(restored["versionName"], "1.1.2")
+
     def test_explicit_launch_occurs_after_install_verification_without_force_stop(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -616,7 +646,7 @@ class TwInstallerCliTest(unittest.TestCase):
         report = json.loads(output.getvalue())
         self.assertEqual(report["status"], "release-checked")
         self.assertEqual(report["releaseManifestRefresh"]["status"], "remote-selected")
-        self.assertEqual(report["selectedRelease"]["latestVersion"], "1.1.2")
+        self.assertEqual(report["selectedRelease"]["latestVersion"], installer.load_release_manifest().latest_version)
 
     def test_known_release_manifest_matches_pinned_latest(self) -> None:
         raw = json.loads((ROOT / "manifests" / "known-releases.json").read_text(encoding="utf-8"))
@@ -630,7 +660,7 @@ class TwInstallerCliTest(unittest.TestCase):
         self.assertEqual(set(latest.splits), {"base", "base_assets", "config.arm64_v8a"})
         self.assertEqual(
             latest.splits["base"].sha256,
-            "ceafa5ba761b8d3996ce2718ff163b8b21707fdc1d304d6edc27b8582c93038e",
+            next(release for release in raw["releases"] if release["versionName"] == raw["latestVersion"])["splits"]["base"]["sha256"],
         )
         source = MODULE_PATH.read_text(encoding="utf-8")
         self.assertNotIn(latest.xapk.sha256, source)

@@ -1,7 +1,7 @@
 # Android 11+ 单手机安装原版台服 XAPK
 
 本页提供两条不使用电脑、模拟器或台湾区 Google 账号的路线。两条路线都安装
-同一套未修改、未重签名的台服 1.1.2 三 split XAPK，并把 Android 的 installer
+同一套未修改、未重签名的台服 1.1.3 三 split XAPK，并把 Android 的 installer
 package name 设为 `com.android.vending`。
 
 - **首选 GUI**：Shizuku + 开源 Install with Options，适合普通用户；
@@ -11,20 +11,23 @@ package name 设为 `com.android.vending`。
 Android 11/API 30 或更新版本才具有本页使用的系统内置无线调试本机启动方式。
 Android 10 及以下请使用电脑 ADB 或仓库中的 Windows/MuMu 向导。
 
+请同时更新工具 ZIP：旧 `install_tw_termux.sh` 固定为 1.1.2，会拒绝新版包。
+升级请勿先卸载或清除资料。1.1.3 尚待非台区账号实机登录验收；校验与安装成功不等于账号登录成功。
+
 ## 下载与固定校验值
 
 原版 XAPK：
 
-<https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/v1.1.2/tw.sonet.magiaexedra-1.1.2-26072717.xapk>
+<https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/v1.1.3/tw.sonet.magiaexedra-1.1.3-26082020.xapk>
 
 ```text
-大小：769197299 bytes
-SHA-256：664dfbc307c5f6b640d01b1fc661de02fa30fc382a68426530abc657dc9e2d14
+大小：769647949 bytes
+SHA-256：e99d80c95c746c80258ec5682231861f0ca1dbbb9390b6d764c398ff1c4f5d95
 ```
 
 三个 split 的固定值在
-[`mobile/SHA256SUMS-tw-1.1.2.txt`](../mobile/SHA256SUMS-tw-1.1.2.txt)。
-未来新版本必须先发布新的完整 XAPK 与每个 split 固定值；不要把本脚本的 1.1.2
+[`mobile/SHA256SUMS-tw-1.1.3.txt`](../mobile/SHA256SUMS-tw-1.1.3.txt)。
+未来新版本必须先发布新的完整 XAPK 与每个 split 固定值；不要把本脚本的 1.1.3
 常量用于其他版本。
 
 建议至少保留约 2.5 GiB 可用存储，供 XAPK、解压文件及系统安装暂存使用。升级
@@ -41,7 +44,7 @@ SHA-256：664dfbc307c5f6b640d01b1fc661de02fa30fc382a68426530abc657dc9e2d14
 4. **先校验 XAPK**。GUI 安装器本身不会强制本仓库的 SHA-256。可使用 Termux：
 
    ```text
-   sha256sum ~/storage/downloads/tw.sonet.magiaexedra-1.1.2-26072717.xapk
+   sha256sum ~/storage/downloads/tw.sonet.magiaexedra-1.1.3-26082020.xapk
    ```
 
    输出必须与上方完整值完全一致。也可使用可信的本地 SHA-256 工具。
@@ -99,12 +102,12 @@ adb devices
 ### 3. 执行安装
 
 ```text
-bash mobile/install_tw_termux.sh ~/storage/downloads/tw.sonet.magiaexedra-1.1.2-26072717.xapk
+bash mobile/install_tw_termux.sh ~/storage/downloads/tw.sonet.magiaexedra-1.1.3-26082020.xapk
 ```
 
 脚本会自动：
 
-1. 验证完整 XAPK 的 769197299-byte 大小及固定 SHA-256；
+1. 验证完整 XAPK 的 769647949-byte 大小及固定 SHA-256；
 2. 只提取三个 APK，并按各自固定 SHA-256 识别 base、assets 和 arm64 split；
 3. 自动选择唯一已连接的本机 Wireless ADB endpoint；
 4. 确认目标为 Android 11/API 30 或更新版本；
@@ -114,7 +117,7 @@ bash mobile/install_tw_termux.sh ~/storage/downloads/tw.sonet.magiaexedra-1.1.2-
    adb install-multiple -r -i com.android.vending BASE ASSETS ARM64
    ```
 
-6. 验证版本 `1.1.2 (26072717)`、三个安装路径及 installer package；
+6. 验证版本 `1.1.3 (26082020)`、三个安装路径及 installer package；
 7. 执行 `am force-stop`，保持游戏停止，绝不自动启动。
 
 若连接了多个无线目标：

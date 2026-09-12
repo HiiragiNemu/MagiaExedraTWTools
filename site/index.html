@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#faf7f2">
+  <meta name="description" content="魔法少女小圆 Magia Exedra 台服原版 XAPK 下载、MuMu 升级与 Android 手机中文教程。公开下载，无需 Google Play 账号改区。">
+  <title>Exedra 台服下载站 · 原版客户端与中文安装指南</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script src="site.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#downloads">跳转到下载</a>
+<header class="topbar wrap">
+  <a class="brand" href="#"><span class="mark" aria-hidden="true">✧</span><span>EXEDRA <b>TW</b><small>社区下载与安装指南</small></span></a>
+  <nav aria-label="主导航"><a href="#downloads">下载</a><a href="#guide">中文教程</a><a href="#faq">常见问题</a><a class="repo-link" href="{{REPO}}">GitHub ↗</a></nav>
+</header>
+<main>
+  <section class="hero wrap" aria-labelledby="title">
+    <div class="hero-copy">
+      <p class="eyebrow"><span></span> 原版台服 · 公开下载</p>
+      <h1 id="title">记忆的旅途，<br><em>从这里继续。</em></h1>
+      <p class="intro">魔法少女小圆 Magia Exedra 台服下载与中文安装指南。<br class="desktop">保留游戏资料，升级到最新原版客户端。</p>
+      <div class="hero-actions"><a class="button primary" href="#downloads">获取客户端 <span>↓</span></a><a class="text-link" href="#guide">第一次安装？看这里 →</a></div>
+      <ul class="promises" aria-label="安装特点"><li>发布者原始签名</li><li>无需 Google Play 改区</li><li>支持原位升级</li></ul>
+    </div>
+    <aside class="version-card" aria-label="当前已验证版本">
+      <div class="card-top"><span class="pill">ANDROID · 台服</span><span class="tiny-star" aria-hidden="true">✦</span></div>
+      <p class="version-label">当前已验证客户端</p><p class="version">{{VERSION}}<span>原版 XAPK</span></p>
+      <dl class="version-facts"><div><dt>构建版本</dt><dd>{{CODE}}</dd></div><div><dt>包大小</dt><dd>{{SIZE_MIB}} MiB</dd></div><div><dt>架构</dt><dd>arm64-v8a</dd></div><div><dt>核验日期</dt><dd>{{DATE}}</dd></div></dl>
+      <p class="card-note">已有旧版？直接升级，<strong>不要先卸载。</strong></p>
+    </aside>
+  </section>
+
+  <section class="section wrap" id="downloads" aria-labelledby="download-title">
+    <div class="section-heading"><div><p class="eyebrow">01 / DOWNLOAD</p><h2 id="download-title">需要的文件，都在这里</h2></div><p>公开 GitHub Releases，无需 GitHub 账号。</p></div>
+    <div class="download-grid">
+      <article class="download-card featured"><div class="file-symbol" aria-hidden="true">↓</div><div><span class="tag">游戏客户端</span><h3>台服原版 XAPK</h3><p>版本 {{VERSION}} · 包含完整三个 APK split<br>适用于 64 位 Android 手机与 MuMu。</p></div><a class="button primary" href="{{XAPK}}">下载 XAPK <small>{{SIZE_MIB}} MiB</small></a></article>
+      <article class="download-card"><div class="file-symbol" aria-hidden="true">⌘</div><div><span class="tag">安装与升级</span><h3>安装工具 {{TOOLS_VERSION}}</h3><p>Python 一键向导、手机脚本与中文说明。<br>电脑升级时自动备份原 APK。</p></div><a class="button secondary" href="{{TOOLS_URL}}">下载工具 ZIP <span>↓</span></a></article>
+    </div>
+    <div class="integrity"><div><b>下载后，核对完整文件</b><p>XAPK SHA-256 · {{BYTES}} bytes</p></div><code id="xapk-hash">{{SHA256}}</code><button class="copy small" type="button" data-copy="xapk-hash">复制校验值</button></div>
+    <div class="under-links"><a href="files/SHA256SUMS-tw-{{VERSION}}.txt">三个 split 的校验值 ↗</a><a href="files/verification.json">版本与签名验证记录 ↗</a><a href="{{REPO}}/releases">历史版本 ↗</a></div>
+  </section>
+
+  <section class="guide-section" id="guide" aria-labelledby="guide-title"><div class="wrap">
+    <div class="section-heading"><div><p class="eyebrow">02 / GET STARTED</p><h2 id="guide-title">选择你的安装方式</h2></div><p>已有游戏请原位升级，保留账号与游戏数据。</p></div>
+    <div class="tabs" role="tablist" aria-label="安装设备"><button id="tab-pc" role="tab" aria-selected="true" aria-controls="panel-pc" type="button">电脑 / MuMu</button><button id="tab-phone" role="tab" aria-selected="false" aria-controls="panel-phone" tabindex="-1" type="button">Android 手机</button></div>
+    <div id="panel-pc" class="guide-panel" role="tabpanel" aria-labelledby="tab-pc">
+      <ol class="steps">
+        <li><span class="step-number">1</span><div><h3>准备好工具与 MuMu</h3><p>安装 <a href="https://www.python.org/downloads/windows/">Python 3.10 或更新版本</a>与 <a href="https://developer.android.com/tools/releases/platform-tools">Android Platform Tools</a>。启动 64 位 MuMu，开启 ADB 调试。下载上方工具 ZIP，并<strong>完整解压</strong>，不要只单独下载 install_tw.py。</p></div></li>
+        <li><span class="step-number">2</span><div><h3>运行一键向导</h3><p>在解压后的文件夹里双击 <code>install_tw.py</code>，或打开终端运行：</p><div class="command"><code id="pc-command">py -3 install_tw.py</code><button type="button" class="copy" data-copy="pc-command">复制</button></div><p>选择“下载已校验最新版”，或者选择已下载的 {{VERSION}} XAPK。向导有中文提示；下载代理留空即直连。</p></div></li>
+        <li><span class="step-number">3</span><div><h3>确认设备，再原位升级</h3><p>多个模拟器同时运行时，按向导编号选中目标。确认摘要后输入 <code>y</code>。工具会验证完整包及三个 split，以 <code>-r</code> 保留数据，并在升级前备份旧 APK。</p><p>不会修改 Google 账号地区，也不会改动系统代理、VPN 或 DNS。</p></div></li>
+        <li><span class="step-number">4</span><div><h3>看到 verified，再手动打开游戏</h3><p>安装器核对版本 {{VERSION}}（{{CODE}}）、全部 split 与安装来源。完成后游戏保持停止，由你手动启动；后续游戏内资源下载是正常的独立步骤。</p><a class="text-link" href="{{REPO}}/blob/main/docs/TW_MUMU_ORIGINAL_INSTALL.zh-CN.md">完整电脑教程与回滚说明 ↗</a></div></li>
+      </ol>
+      <aside class="guide-tip"><b>不要先卸载或清除数据</b><p>升级前确认游戏内的账号绑定／继承状态。工具备份的是 APK，不是账号或存档；旧版本也可能因服务器规则而不再可用。</p></aside>
+    </div>
+    <div id="panel-phone" class="guide-panel" role="tabpanel" aria-labelledby="tab-phone" hidden>
+      <ol class="steps">
+        <li><span class="step-number">1</span><div><h3>Android 11+：准备 Shizuku</h3><p>从 <a href="https://shizuku.rikka.app/download/">Shizuku 官方下载页</a>安装应用，在开发者选项开启“无线调试”，按提示配对并启动。Android 10 及以下请使用电脑 ADB 路线。</p></div></li>
+        <li><span class="step-number">2</span><div><h3>下载并校验 XAPK，解压三个 APK</h3><p>下载上方 {{VERSION}} XAPK，核对 SHA-256，再作为 ZIP 解压。确认恰好包含三个 APK；不要只安装 base.apk。为下载、解压与安装暂存保留约 2.5 GiB 空间。</p></div></li>
+        <li><span class="step-number">3</span><div><h3>使用 Install with Options 安装完整 split</h3><p>安装 <a href="https://github.com/zacharee/InstallWithOptions/releases">Install with Options 官方 Release</a>，授予 Shizuku 权限，<strong>一次选中全部三个 APK</strong>。Installer package name 填写：</p><div class="command"><code id="installer-name">com.android.vending</code><button type="button" class="copy" data-copy="installer-name">复制</button></div><p>保持签名验证开启，不勾选无关的降级／跳过验证选项。升级不要先卸载已有游戏。</p></div></li>
+        <li><span class="step-number">4</span><div><h3>确认版本，再手动启动</h3><p>在应用信息中确认 {{VERSION}}。安装与账号登录是不同环节；出现签名不兼容时停止，不要通过卸载清数据来试错。</p><a class="text-link" href="{{REPO}}/blob/main/docs/TW_ANDROID_PHONE_INSTALL.zh-CN.md">完整手机教程：含 Termux 强校验路线 ↗</a></div></li>
+      </ol>
+      <aside class="guide-tip"><b>使用 Termux 的用户</b><p>请下载工具 {{TOOLS_VERSION}}，同步更新 <code>mobile/install_tw_termux.sh</code>。旧手机脚本固定为 1.1.2，会正确拒绝新版包；不要手工跳过校验。</p><p>GUI 安装器不会自动核对本仓库哈希，安装前请自行校验。</p></aside>
+    </div>
+  </div></section>
+
+  <section class="section wrap" id="faq" aria-labelledby="faq-title"><div class="section-heading"><div><p class="eyebrow">03 / HELP</p><h2 id="faq-title">遇到问题，先看这里</h2></div></div>
+    <div class="faq-grid"><div>
+      <details><summary>没有台湾区 Google 账号，也能用吗？</summary><p>公开下载与原版 split 安装不要求 Google Play 账号改区。这不是账号转服或购买记录工具。原包与安装已验证；能否成功登录仍由游戏、账号与服务状态决定。本次没有非台区 Google 账号的实际登录验收记录。</p></details>
+      <details><summary>游戏提示“应用程序已推出新版本”</summary><p>这是 Android 客户端升级提示。下载 {{VERSION}}（{{CODE}}）XAPK 后原位升级，不要重新安装旧版 1.1.2，也不需要先清除游戏资源。</p></details>
+      <details><summary>以前教程的 GitHub 链接为什么显示 404？</summary><p>仓库曾被设为私有；现在仓库、教程与发布下载已公开。请使用本页按钮获取最新文件。若浏览器仍显示旧内容，请刷新页面；历史 1.1.2 文件并不会自动更新。</p></details>
+    </div><div>
+      <details><summary>安装失败、签名冲突或 split 缺失</summary><p>请使用完整的同版本 XAPK，一次安装全部三个 APK。若显示 INSTALL_FAILED_UPDATE_INCOMPATIBLE，现有客户端可能签名不同；先保留资料并检查来源。不要关闭签名校验或卸载来试错。</p></details>
+      <details><summary>向导找不到设备，或有多个模拟器</summary><p>开启 MuMu ADB 调试。没有自动发现时输入该实例设置中显示的 ADB 地址；多个实例要明确选择。也可用 TW_ADB 指定 adb.exe 的路径。不要把教程示例端口直接当成你的设备端口。</p></details>
+      <details><summary>安装成功之后，仍有网络或登录问题</summary><p>安装、网络与账号登录需要分别判断。保留错误文字与版本信息，不要反复卸载或清数据。本工具不改变 VPN、代理、DNS 或游戏账号，也不收集密码、引继码或会话资料。</p></details>
+    </div></div>
+    <div class="verification-note"><span aria-hidden="true">✓</span><div><b>可追溯的原版文件</b><p>三个 APK 均通过 Android apksigner 验证，与旧版发布者证书一致。完整包与 split 哈希公开可查；三个 MuMu 实例已原位升级至 1.1.3。安装成功与实际游玩验收分别记录。</p></div><a href="files/verification.json">查看记录 ↗</a></div>
+  </section>
+</main>
+<footer class="wrap"><div><b>EXEDRA TW</b><p>社区维护的下载与安装工具，不是游戏官方网站。游戏版权属于原权利人。</p></div><div><a href="https://mme.so-net.tw/">台服官网 ↗</a><a href="{{REPO}}">开源仓库 ↗</a><small>更新于 {{DATE}} · 原包托管于 GitHub Releases</small></div></footer>
+<p id="copy-status" class="sr-only" role="status" aria-live="polite"></p>
+</body></html>

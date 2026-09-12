@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import importlib.util
+import json
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -78,13 +80,17 @@ def test_product_defaults_do_not_hardcode_private_proxy_port() -> None:
 
 def test_mobile_script_pins_all_hashes_and_never_launches() -> None:
     script = (ROOT / "mobile" / "install_tw_termux.sh").read_text(encoding="utf-8")
-    checksums = (ROOT / "mobile" / "SHA256SUMS-tw-1.1.2.txt").read_text(encoding="utf-8")
-    expected = {
-        "664dfbc307c5f6b640d01b1fc661de02fa30fc382a68426530abc657dc9e2d14",
-        "ceafa5ba761b8d3996ce2718ff163b8b21707fdc1d304d6edc27b8582c93038e",
-        "0d21a05fd1007b31a1a6fa72561c6d6f2eeaa8353492913dd925465bc10d82ed",
-        "19466690a93ae7ea84485b86453901c5ed7745aea2b2d0cd4098bb13b02c69c5",
-    }
+    manifest = json.loads((ROOT / "manifests" / "known-releases.json").read_text(encoding="utf-8"))
+    latest = next(row for row in manifest["releases"] if row["versionName"] == manifest["latestVersion"])
+    checksums = (ROOT / "mobile" / f"SHA256SUMS-tw-{latest['versionName']}.txt").read_text(encoding="utf-8")
+    expected = {latest["sha256"], *(row["sha256"] for row in latest["splits"].values())}
+    pins = dict(re.findall(r'^([A-Z0-9_]+)="([^"\n]+)"$', script, re.MULTILINE))
+    assert pins["EXPECTED_VERSION_NAME"] == latest["versionName"]
+    assert pins["EXPECTED_VERSION_CODE"] == str(latest["versionCode"])
+    assert pins["EXPECTED_XAPK_SIZE"] == str(latest["length"])
+    for prefix, role in [("BASE", "base"), ("ASSETS", "base_assets"), ("ARM64", "config.arm64_v8a")]:
+        assert pins[f"EXPECTED_{prefix}_SIZE"] == str(latest["splits"][role]["length"])
+        assert pins[f"EXPECTED_{prefix}_SHA256"] == latest["splits"][role]["sha256"]
     assert all(digest in script for digest in expected)
     assert all(digest in checksums for digest in expected)
     assert 'install-multiple -r -i "$INSTALLER_PACKAGE"' in script
@@ -102,7 +108,7 @@ def test_mobile_docs_cover_both_supported_routes_and_boundary() -> None:
         assert "https://github.com/zacharee/InstallWithOptions" in content
         assert "https://termux.dev/en/" in content
         assert "com.android.vending" in content
-        assert "664dfbc307c5f6b640d01b1fc661de02fa30fc382a68426530abc657dc9e2d14" in content
+        assert installer.load_release_manifest().latest.xapk.sha256 in content
         assert "Android 11" in content
         assert "Android 10" in content
 

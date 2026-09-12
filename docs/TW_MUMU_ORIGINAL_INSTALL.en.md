@@ -4,10 +4,12 @@ This tool requires Python 3.10 or newer plus Android Platform Tools. It installs
 the unmodified original XAPK. It does not patch the APK, signature, license
 response, or game code, and it never reads or records game-account data.
 
-Verified result: the original game Activity can start without changing a Google
-account to the Taiwan region, instead of redirecting to Google Play. Server
-availability, network routing, guest login, and data handover remain separate
-steps.
+The current pin is **1.1.3 (26082020)**. Downloading and installing do not require
+changing the Google account region. Upgrade in place; do not uninstall first.
+The earlier client was observed starting without a Play redirect; that historical
+result is not a live non-Taiwan-account login test for 1.1.3. Package signatures
+and offline installer regressions are verified; live login remains unverified.
+Server availability, network routing, guest login, and data handover are separate.
 
 ## Prerequisites
 

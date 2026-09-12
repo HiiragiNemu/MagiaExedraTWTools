@@ -7,6 +7,26 @@ region.
 This repository is intentionally limited to XAPK installation, update, integrity
 verification, backup, and rollback.
 
+## 中文下载网站
+
+**[打开 Exedra 台服下载站](https://magia-exedra-tw-tools.pages.dev/)** — 直接下载文件，阅读电脑 / MuMu 与手机中文教程。
+
+## 最新下载 / 非台区 Google 账号用户
+
+**2026-09-12 更新：台服 Android 1.1.3（26082020）。** 本仓库与下列 Release 下载公开，无需 GitHub 账号。
+
+- [下载原版台服 1.1.3 XAPK](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/v1.1.3/tw.sonet.magiaexedra-1.1.3-26082020.xapk)
+- [下载安装工具 v1.3.1 ZIP（电脑和手机教程均包含）](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/tw-installer-v1.3.1/MagiaExedraTWTools-v1.3.1.zip)
+- [本次版本、签名与兼容性说明](docs/TW_CLIENT_1.1.3.zh-CN.md)
+- [Windows / MuMu 安装教程](docs/TW_MUMU_ORIGINAL_INSTALL.zh-CN.md) · [Android 手机教程](docs/TW_ANDROID_PHONE_INSTALL.zh-CN.md)
+
+电脑用户：下载并解压**工具 ZIP**，运行 `install_tw.py`，选择下载已校验最新版；已有游戏请直接原位升级，保留游戏资料，**不要先卸载或清除数据**。
+手机用户：请使用更新后的 1.1.3 手机教程及脚本，旧手机脚本固定为 1.1.2，需一并更新。
+
+这些下载与安装步骤不要求把 Google Play 账号切换至台区。实际游戏登录、服务器可用性和账号继承由游戏服务决定；安装成功不等于登录成功。1.1.3 的完整包、三 split、签名连续性与离线安装/升级/回滚已核验；三个 MuMu 实例已完成 1.1.2→1.1.3 原位升级，未卸载或清除数据；本次尚无新版非台区账号的实机登录验收记录。
+
+若旧教程的 GitHub 链接曾显示 404，请使用上述公开地址重新下载。遇到截图所示“应用程序已推出新版本”时应升级 **XAPK 客户端**，不是重新下载游戏内资源。不要把第三方旧版缓存页面或安装器版本号当作最新游戏版本。
+
 ## Supported routes
 
 ### Windows / MuMu
@@ -77,9 +97,9 @@ hashes, and supported ABI before installation.
 Current pinned original client:
 
 - package: `tw.sonet.magiaexedra`
-- version: `1.1.2` (`26072717`)
+- version: `1.1.3` (`26082020`)
 - XAPK SHA-256:
-  `664dfbc307c5f6b640d01b1fc661de02fa30fc382a68426530abc657dc9e2d14`
+  `e99d80c95c746c80258ec5682231861f0ca1dbbb9390b6d764c398ff1c4f5d95`
 
 Check the online release manifest without ADB or an XAPK download:
 
@@ -120,3 +140,8 @@ real emulator or phone.
 ## License
 
 [MIT](LICENSE)
+
+## Download website
+
+The dependency-free Chinese download site is built from the same pinned release manifest.
+See [Cloudflare build and deployment](docs/CLOUDFLARE_SITE.zh-CN.md).
