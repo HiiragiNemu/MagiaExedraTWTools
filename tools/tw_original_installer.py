@@ -33,6 +33,9 @@ from xml.etree import ElementTree
 
 
 PACKAGE_NAME = "tw.sonet.magiaexedra"
+REGION_CODE = "TW"
+REGION_DISPLAY = "台服 / Taiwan"
+STATE_DIRECTORY_NAME = "MagiaExedraTWTools"
 INSTALLER_PACKAGE = "com.android.vending"
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_RELEASE_MANIFEST = REPOSITORY_ROOT / "manifests" / "known-releases.json"
@@ -52,6 +55,21 @@ MAX_TOTAL_APK_BYTES = 4 * 1024 * 1024 * 1024
 MAX_DOWNLOAD_BYTES = 4 * 1024 * 1024 * 1024
 DOWNLOAD_CHUNK = 1024 * 1024
 SHA256_PATTERN = re.compile(r"[0-9a-f]{64}")
+
+
+def configure_jp() -> None:
+    """Select the independent JP pins for the JP entry point only."""
+    global PACKAGE_NAME, REGION_CODE, REGION_DISPLAY, STATE_DIRECTORY_NAME
+    global DEFAULT_RELEASE_MANIFEST, DEFAULT_REMOTE_RELEASE_MANIFEST_URL
+    PACKAGE_NAME = "com.aniplex.magia.exedra.jp"
+    REGION_CODE = "JP"
+    REGION_DISPLAY = "日服 / Japan"
+    STATE_DIRECTORY_NAME = "MagiaExedraJPTools"
+    DEFAULT_RELEASE_MANIFEST = REPOSITORY_ROOT / "manifests" / "jp-known-releases.json"
+    DEFAULT_REMOTE_RELEASE_MANIFEST_URL = (
+        "https://raw.githubusercontent.com/HiiragiNemu/MagiaExedraTWTools/"
+        "main/manifests/jp-known-releases.json"
+    )
 
 
 class ToolError(RuntimeError):
@@ -229,7 +247,8 @@ def parse_release_manifest(data: Any, source: str) -> ReleaseManifest:
     return ReleaseManifest(source, latest_version, latest_endpoint, releases)
 
 
-def load_release_manifest(path: Path = DEFAULT_RELEASE_MANIFEST) -> ReleaseManifest:
+def load_release_manifest(path: Path | None = None) -> ReleaseManifest:
+    path = path or DEFAULT_RELEASE_MANIFEST
     try:
         with path.open("r", encoding="utf-8") as handle:
             data = json.load(handle)
@@ -1002,7 +1021,8 @@ print("Rollback completed")
 
 def write_rollback(state_directory: Path) -> Path:
     path = state_directory / "rollback.py"
-    path.write_text(ROLLBACK_SCRIPT, encoding="utf-8", newline="\n")
+    script = ROLLBACK_SCRIPT.replace('PACKAGE = "tw.sonet.magiaexedra"', f'PACKAGE = "{PACKAGE_NAME}"')
+    path.write_text(script, encoding="utf-8", newline="\n")
     with contextlib.suppress(OSError):
         path.chmod(0o755)
     return path
@@ -1182,8 +1202,8 @@ def install_xapk(
 
 def default_data_root() -> Path:
     if os.name == "nt" and os.environ.get("LOCALAPPDATA"):
-        return Path(os.environ["LOCALAPPDATA"]) / "MagiaExedraTWTools"
-    return Path.home() / ".local" / "state" / "MagiaExedraTWTools"
+        return Path(os.environ["LOCALAPPDATA"]) / STATE_DIRECTORY_NAME
+    return Path.home() / ".local" / "state" / STATE_DIRECTORY_NAME
 
 
 def new_state_directory(parent: Path | None) -> Path:
@@ -1234,12 +1254,12 @@ def _common_adb_candidates() -> list[Path]:
 
 
 def find_adb_executable() -> str:
-    configured = os.environ.get("TW_ADB")
+    configured = os.environ.get(f"{REGION_CODE}_ADB")
     if configured:
         resolved = _resolve_executable(configured)
         if resolved:
             return resolved
-        raise ToolError(f"TW_ADB points to a missing adb executable: {configured}")
+        raise ToolError(f"{REGION_CODE}_ADB points to a missing adb executable: {configured}")
     for value in (os.environ.get("ADB"), "adb"):
         if value and (resolved := _resolve_executable(value)):
             return resolved
@@ -1325,7 +1345,7 @@ def _windows_drive_roots() -> tuple[Path, ...]:
 
 
 def discover_local_xapks(extra_directories: Iterable[Path] = ()) -> tuple[Path, ...]:
-    configured = os.environ.get("TW_XAPK")
+    configured = os.environ.get(f"{REGION_CODE}_XAPK")
     if configured:
         configured_path = Path(os.path.expandvars(os.path.expanduser(configured.strip().strip('"'))))
         if not configured_path.is_file():
@@ -1430,9 +1450,9 @@ def _choose_source(candidates: tuple[Path, ...]) -> tuple[str, Path | None]:
 
 
 def interactive_main() -> int:
-    print("Magia Exedra 台服原版客户端安装/升级 / Taiwan original-client installer/updater")
+    print(f"Magia Exedra {REGION_DISPLAY} 原版客户端安装/升级")
     print("保留游戏数据、备份旧 APK，安装后默认不启动游戏。")
-    print("Preserves app data, backs up the installed APK set, and keeps the game stopped.\n")
+    print("Preserves app data, backs up the installed APK set, and keeps the game stopped; after install it remains stopped.\n")
     adb_executable = find_adb_executable()
     print(f"ADB: {adb_executable}")
     serial = _choose_device(adb_executable)
@@ -1441,7 +1461,7 @@ def interactive_main() -> int:
     source_label: str
     if source_mode == "download":
         arguments.append("--download-latest")
-        proxy = os.environ.get("TW_PROXY", "").strip()
+        proxy = os.environ.get(f"{REGION_CODE}_PROXY", "").strip()
         if not proxy:
             proxy = _ask("下载代理（可选；Enter 直连）/ Optional HTTP proxy (Enter for direct): ").strip()
         if proxy:
@@ -1452,9 +1472,9 @@ def interactive_main() -> int:
         arguments.extend(["--xapk", str(xapk_path)])
         source_label = str(xapk_path)
     optional_environment = {
-        "TW_RELEASE_MANIFEST": "--release-manifest",
-        "TW_DOWNLOAD_DIR": "--download-dir",
-        "TW_STATE_PARENT": "--state-parent",
+        f"{REGION_CODE}_RELEASE_MANIFEST": "--release-manifest",
+        f"{REGION_CODE}_DOWNLOAD_DIR": "--download-dir",
+        f"{REGION_CODE}_STATE_PARENT": "--state-parent",
     }
     for variable, option in optional_environment.items():
         if os.environ.get(variable):
@@ -1470,14 +1490,13 @@ def interactive_main() -> int:
         print("已取消；未修改应用包 / Cancelled; no package changes were made.")
         return 0
     result = main(arguments)
-    print("\n完成：已安装并验证原版台服客户端，游戏保持停止。")
-    print("Finished. The verified original Taiwan client is installed and remains stopped.")
+    print(f"\n完成：已安装并验证原版 {REGION_DISPLAY} 客户端，游戏保持停止。")
     return result
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Install or update the unmodified Magia Exedra Taiwan XAPK on MuMu/ADB"
+        description=f"Install or update the unmodified Magia Exedra {REGION_DISPLAY} XAPK on MuMu/ADB"
     )
     source = parser.add_mutually_exclusive_group(required=True)
     source.add_argument("--xapk", type=Path, help="local original XAPK")
@@ -1662,3 +1681,4 @@ def run_entrypoint() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(run_entrypoint())
+

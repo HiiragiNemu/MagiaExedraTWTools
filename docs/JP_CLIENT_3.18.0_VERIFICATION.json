@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "platform": "android-jp",
+  "packageName": "com.aniplex.magia.exedra.jp",
+  "versionName": "3.18.0",
+  "versionCode": 26090311,
+  "xapk": {
+    "length": 923195400,
+    "sha256": "43cd6eca5a8af7e8bf017fd922e4b0a9260e63933051f5eff3ae21c89a89a514",
+    "members": ["com.aniplex.magia.exedra.jp.apk", "base_assets.apk", "config.arm64_v8a.apk", "manifest.json"]
+  },
+  "sourceEvidence": "MagiaExedraJPClientSource/reports/xapk-inventory.json and reports/verification.md",
+  "installation": "Direct split installation through ADB/MuMu; Google Play region switching is not required for download or installation.",
+  "loginAcceptance": "Game login and service availability are separate runtime conditions and are not implied by package verification.",
+  "verifiedAt": "2026-09-13"
+}

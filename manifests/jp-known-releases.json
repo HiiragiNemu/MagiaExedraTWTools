@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "verifiedAt": "2026-09-13",
+  "packageName": "com.aniplex.magia.exedra.jp",
+  "source": "Hash-pinned original JP XAPK mirrored in this repository's GitHub Releases",
+  "latestVersion": "3.18.0",
+  "latestEndpoint": "https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.18.0/com.aniplex.magia.exedra.jp-3.18.0.xapk",
+  "releases": [
+    {
+      "versionName": "3.18.0",
+      "versionCode": 26090311,
+      "length": 923195400,
+      "sha256": "43cd6eca5a8af7e8bf017fd922e4b0a9260e63933051f5eff3ae21c89a89a514",
+      "minSdk": 28,
+      "splits": {
+        "base": {"length": 16839758, "sha256": "adb1b0d8169207510763d4729a47c56114d18aca0854d657a75adab0c085063d"},
+        "base_assets": {"length": 582993441, "sha256": "96ebff642f104eb934254b9b016003284b3c089a63506bec7ab5965dd32cdff4"},
+        "config.arm64_v8a": {"length": 323357685, "sha256": "8204abbafeebc9334a71d260798c6e290a57f672be4cf57bd58b15b24a1a0fd0"}
+      }
+    }
+  ]
+}

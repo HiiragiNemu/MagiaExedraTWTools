@@ -7,16 +7,21 @@ import re
 import shutil
 
 ROOT=Path(__file__).resolve().parents[1]
-TOOLS_VERSION='1.3.1'
+TOOLS_VERSION='1.4.0'
 REPO='https://github.com/HiiragiNemu/MagiaExedraTWTools'
 
 def build(output: Path):
     manifest=json.loads((ROOT/'manifests/known-releases.json').read_text(encoding='utf-8'))
+    jp_manifest=json.loads((ROOT/'manifests/jp-known-releases.json').read_text(encoding='utf-8'))
     release=next(r for r in manifest['releases'] if r['versionName']==manifest['latestVersion'])
+    jp_release=next(r for r in jp_manifest['releases'] if r['versionName']==jp_manifest['latestVersion'])
     values={'REPO':REPO,'VERSION':release['versionName'],'CODE':release['versionCode'],'BYTES':release['length'],
             'SIZE_MIB':f"{release['length']/1048576:.1f}",'DATE':manifest['verifiedAt'],'SHA256':release['sha256'],
             'XAPK':manifest['latestEndpoint'],'TOOLS_VERSION':'v'+TOOLS_VERSION,
-            'TOOLS_URL':f'{REPO}/releases/download/tw-installer-v{TOOLS_VERSION}/MagiaExedraTWTools-v{TOOLS_VERSION}.zip'}
+            'TOOLS_URL':f'{REPO}/releases/download/tw-jp-tools-v{TOOLS_VERSION}/MagiaExedraTWJPTools-v{TOOLS_VERSION}.zip',
+            'JP_VERSION':jp_release['versionName'],'JP_CODE':jp_release['versionCode'],'JP_BYTES':jp_release['length'],
+            'JP_SIZE_MIB':f"{jp_release['length']/1048576:.1f}",'JP_SHA256':jp_release['sha256'],
+            'JP_XAPK':jp_manifest['latestEndpoint'],'JP_DATE':jp_manifest['verifiedAt']}
     output=output.resolve();source=(ROOT/'site').resolve()
     if output==source or output.is_relative_to(source):raise ValueError('Choose a separate output directory')
     output.mkdir(parents=True,exist_ok=True)
@@ -30,6 +35,9 @@ def build(output: Path):
     shutil.copyfile(ROOT/f"mobile/SHA256SUMS-tw-{release['versionName']}.txt",f/f"SHA256SUMS-tw-{release['versionName']}.txt")
     shutil.copyfile(ROOT/f"docs/TW_CLIENT_{release['versionName']}_VERIFICATION.json",f/'verification.json')
     shutil.copyfile(ROOT/'manifests/known-releases.json',f/'known-releases.json')
+    shutil.copyfile(ROOT/'manifests/jp-known-releases.json',f/'jp-known-releases.json')
+    shutil.copyfile(ROOT/f"docs/JP_CLIENT_{jp_release['versionName']}_VERIFICATION.json",f/'jp-verification.json')
+    shutil.copyfile(ROOT/f"mobile/SHA256SUMS-jp-{jp_release['versionName']}.txt",f/f"SHA256SUMS-jp-{jp_release['versionName']}.txt")
     print(json.dumps({'ok':True,'version':release['versionName'],'output':str(output),'files':9}))
 
 if __name__=='__main__':
