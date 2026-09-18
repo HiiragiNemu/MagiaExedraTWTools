@@ -25,7 +25,7 @@ def build(output: Path):
     output=output.resolve();source=(ROOT/'site').resolve()
     if output==source or output.is_relative_to(source):raise ValueError('Choose a separate output directory')
     output.mkdir(parents=True,exist_ok=True)
-    for name in ['style.css','site.js','favicon.svg','_headers']:shutil.copyfile(source/name,output/name)
+    for name in ['style.css','site.js','favicon.svg','_headers','_redirects']:shutil.copyfile(source/name,output/name)
     template=(source/'index.html').read_text(encoding='utf-8')
     for key,value in values.items():template=template.replace('{{'+key+'}}',html.escape(str(value),quote=True))
     if re.search(r'\{\{[A-Z_]+\}\}',template):raise ValueError('Unresolved template field')
@@ -38,7 +38,7 @@ def build(output: Path):
     shutil.copyfile(ROOT/'manifests/jp-known-releases.json',f/'jp-known-releases.json')
     shutil.copyfile(ROOT/f"docs/JP_CLIENT_{jp_release['versionName']}_VERIFICATION.json",f/'jp-verification.json')
     shutil.copyfile(ROOT/f"mobile/SHA256SUMS-jp-{jp_release['versionName']}.txt",f/f"SHA256SUMS-jp-{jp_release['versionName']}.txt")
-    print(json.dumps({'ok':True,'version':release['versionName'],'output':str(output),'files':9}))
+    print(json.dumps({'ok':True,'version':release['versionName'],'output':str(output),'files':10}))
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
