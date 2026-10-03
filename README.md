@@ -1,8 +1,10 @@
 # Magia Exedra TW / JP Original XAPK Installer
 
 Public, reproducible tools for installing or upgrading the **original, unmodified
-Taiwan Android client** without switching a Google Play account to the Taiwan
-region.
+Taiwan and Japan Android clients** without switching the Google Play account
+region for XAPK download and split installation. TW uses the installer wizard
+below; JP has a separate [ADB/phone guide](docs/JP_ANDROID_INSTALL.zh-CN.md).
+The repository name is retained for existing links; it covers both regions.
 
 This repository is intentionally limited to XAPK installation, update, integrity
 verification, backup, and rollback.
@@ -13,7 +15,7 @@ verification, backup, and rollback.
 
 日服同步入口： [JP 3.18.0 原版 XAPK](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.18.0/com.aniplex.magia.exedra.jp-3.18.0.xapk) · [日服安装教程](docs/JP_ANDROID_INSTALL.zh-CN.md)。下载和 split 安装不依赖 Google Play 区域切换。
 
-## 最新下载 / 非台区 Google 账号用户
+## 已发布下载 / 非台区 Google 账号用户（2026-09-12 基线）
 
 **2026-09-12 更新：台服 Android 1.1.3（26082020）。** 本仓库与下列 Release 下载公开，无需 GitHub 账号。
 
@@ -22,16 +24,18 @@ verification, backup, and rollback.
 - [本次版本、签名与兼容性说明](docs/TW_CLIENT_1.1.3.zh-CN.md)
 - [Windows / MuMu 安装教程](docs/TW_MUMU_ORIGINAL_INSTALL.zh-CN.md) · [Android 手机教程](docs/TW_ANDROID_PHONE_INSTALL.zh-CN.md)
 
-电脑用户：下载并解压**工具 ZIP**，运行 `install_tw.py`，选择下载已校验最新版；已有游戏请直接原位升级，保留游戏资料，**不要先卸载或清除数据**。
+电脑用户：下载并解压**工具 ZIP**，运行 `install_tw.py`，选择仓库发布清单中已校验的版本；已有游戏请直接原位升级，保留游戏资料，**不要先卸载或清除数据**。
 手机用户：请使用更新后的 1.1.3 手机教程及脚本，旧手机脚本固定为 1.1.2，需一并更新。
 
-这些下载与安装步骤不要求把 Google Play 账号切换至台区。实际游戏登录、服务器可用性和账号继承由游戏服务决定；安装成功不等于登录成功。1.1.3 的完整包、三 split、签名连续性与离线安装/升级/回滚已核验；三个 MuMu 实例已完成 1.1.2→1.1.3 原位升级，未卸载或清除数据；本次尚无新版非台区账号的实机登录验收记录。
+这些下载与安装步骤不要求把 Google Play 账号切换至台区。实际游戏登录、服务器可用性和账号继承由游戏服务决定；安装成功不等于登录成功。1.1.3 的完整包、三 split、签名连续性与离线安装/升级/回滚已核验；三个 MuMu 实例已完成 1.1.2→1.1.3 原位升级，未卸载或清除数据；该次记录未包含新版非台区账号的实机登录验收，不据此推断后续登录结果。
 
 若旧教程的 GitHub 链接曾显示 404，请使用上述公开地址重新下载。遇到截图所示“应用程序已推出新版本”时应升级 **XAPK 客户端**，不是重新下载游戏内资源。不要把第三方旧版缓存页面或安装器版本号当作最新游戏版本。
 
+这些版本号描述仓库已发布的固定包，不保证等于当前官方最新客户端或游戏内资源目录。`--download-latest` 指本仓库发布清单中的版本，而不是自动确认商店最新版。
+
 ## Supported routes
 
-### Windows / MuMu
+### TW: Windows / MuMu
 
 Requirements:
 
@@ -74,7 +78,7 @@ Guides:
 - [Windows / MuMu guide (English)](docs/TW_MUMU_ORIGINAL_INSTALL.en.md)
 - [Steam Windows 安装与网络准备（中文）](docs/STEAM_INSTALL.zh-CN.md)
 
-### Android 11+ phone only
+### TW: Android 11+ phone only
 
 No computer or emulator is required. Two documented routes are available:
 
@@ -97,7 +101,7 @@ The trusted original-client metadata is stored in
 checks the XAPK hash, package name, version, required split names, per-split
 hashes, and supported ABI before installation.
 
-Current pinned original client:
+Pinned TW original client (JP package and hashes are in the separate guide):
 
 - package: `tw.sonet.magiaexedra`
 - version: `1.1.3` (`26082020`)
