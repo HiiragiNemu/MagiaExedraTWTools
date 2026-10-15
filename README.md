@@ -11,16 +11,18 @@ verification, backup, and rollback.
 
 ## 中文下载网站
 
-**[打开 Exedra TW / JP 下载站](https://magia-exedra-tw-tools.pages.dev/)** — 直接下载文件，阅读电脑 / MuMu 与手机中文教程。
+**[打开 Exedra TW / JP 下载站](https://hiiraginemu.github.io/madeinmagius-site/#exedra)** — 直接下载文件，阅读电脑 / MuMu 与手机中文教程。
 
-日服同步入口： [JP 3.18.0 原版 XAPK](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.18.0/com.aniplex.magia.exedra.jp-3.18.0.xapk) · [日服安装教程](docs/JP_ANDROID_INSTALL.zh-CN.md)。下载和 split 安装不依赖 Google Play 区域切换。
+日服同步入口： [JP 3.21.0 原版 XAPK](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.21.0/com.aniplex.magia.exedra.jp-3.21.0.xapk) · [日服安装教程](docs/JP_ANDROID_INSTALL.zh-CN.md)。下载和 split 安装不依赖 Google Play 区域切换。
+
+日服更新核验：2026-10-15；3.21.0 / 26100810。旧 JP 3.18 Release 缺少资产导致 404；现以固定版本完整包和新清单替代。详见 [日服核验记录](docs/JP_CLIENT_3.21.0_VERIFICATION.json)。
 
 ## 已发布下载 / 非台区 Google 账号用户（2026-09-12 基线）
 
 **2026-09-12 更新：台服 Android 1.1.3（26082020）。** 本仓库与下列 Release 下载公开，无需 GitHub 账号。
 
 - [下载原版台服 1.1.3 XAPK](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/v1.1.3/tw.sonet.magiaexedra-1.1.3-26082020.xapk)
-- [下载 TW/JP 安装工具 v1.4.0 ZIP（电脑和手机教程均包含）](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/tw-jp-tools-v1.4.0/MagiaExedraTWJPTools-v1.4.0.zip)
+- [下载 TW/JP 安装工具 v1.4.1 ZIP（电脑和手机教程均包含）](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/tw-jp-tools-v1.4.1/MagiaExedraTWJPTools-v1.4.1.zip)
 - [本次版本、签名与兼容性说明](docs/TW_CLIENT_1.1.3.zh-CN.md)
 - [Windows / MuMu 安装教程](docs/TW_MUMU_ORIGINAL_INSTALL.zh-CN.md) · [Android 手机教程](docs/TW_ANDROID_PHONE_INSTALL.zh-CN.md)
 

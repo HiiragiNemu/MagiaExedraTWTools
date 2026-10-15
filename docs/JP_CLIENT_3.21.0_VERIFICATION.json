@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "platform": "android-jp",
+  "packageName": "com.aniplex.magia.exedra.jp",
+  "versionName": "3.21.0",
+  "versionCode": 26100810,
+  "minSdk": 28,
+  "xapk": {
+    "length": 959302997,
+    "sha256": "9add4ea7d585c532b082e41b8bcaad1a7f567cb7e0a4692087dd8632d1a32df2"
+  },
+  "splits": [
+    {
+      "role": "base.apk",
+      "split": "",
+      "length": 13067392,
+      "sha256": "45862f69ed9c5474a6ccda5ce4e6f1b23abd4bdf21bbb2335d9e2b25076d6950"
+    },
+    {
+      "role": "split_base_assets.apk",
+      "split": "base_assets",
+      "length": 616873185,
+      "sha256": "030d5277d190d665c55e5b6e341c74c26aadbfe5d87c8fec60b0572486f43611"
+    },
+    {
+      "role": "split_config.arm64_v8a.apk",
+      "split": "config.arm64_v8a",
+      "length": 328932341,
+      "sha256": "a29da70e5213fe37422a85d5f582cac0e466d4c4dc54a12d81c11f89ab7f7111"
+    }
+  ],
+  "signerCertificateSha256": "352ac1e016112fcbb1867771ab5887af0790e64c70ed30d4f7b00801840a1168",
+  "signatureVerification": "apksigner verify --verbose --print-certs: exit 0 for all 3 APKs; publisher certificate matches installed original JP 3.19.1",
+  "officialVersionSource": "https://play.google.com/store/apps/details?id=com.aniplex.magia.exedra.jp&hl=ja&gl=jp",
+  "verifiedAt": "2026-10-15",
+  "runtime": {
+    "device": "Fresh isolated MuMu Android 15 arm64-compatible instance",
+    "googleAccountCountBefore": 0,
+    "installation": "PASS: 3.21.0, three splits, com.android.vending",
+    "rollback": "PASS: fresh-install rollback removed test package; reinstall succeeded",
+    "loginAndGameplay": "PASS: guest login, opening movie, interactive 3D traversal, tutorial battle loaded, battle skill activated; no Google account sign-in",
+    "physicalPhones": "NOT_TESTED",
+    "googleAccountCountAfter": 0,
+    "normalAccountLongTermPlay": "NOT_TESTED",
+    "googleServicesExperiment": "Temporary Play Store/GMS installation did not help and was removed before successful battle test",
+    "evidence": [
+      {
+        "file": "recovered-title.png",
+        "sha256": "d82caadb8deff879557f8e3d54815178a4c49c693bf9e7e695d93d6883e552c5"
+      },
+      {
+        "file": "tutorial-new-scene.png",
+        "sha256": "1fcaf7966632b0a9506e803c286dae3f3f9e77af2b50a0114af14f529177b898"
+      },
+      {
+        "file": "tutorial-battle-skill.png",
+        "sha256": "b77223f26084fbce580b89d0bc0f30424eb82934f101e8af5b055790e97ce7af"
+      }
+    ],
+    "evidenceDownload": "https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.21.0/JP-3.21.0-runtime-proof.zip",
+    "networkRequirement": "A working route to JP login and resource endpoints is required; initial failing routes were not a client-version failure.",
+    "testNetworkRollback": "PASS: temporary test proxy removed, original null setting and pre-existing reverse mappings restored"
+  },
+  "networkChanges": "Installer makes no network-setting changes. Runtime test used a temporary proxy only on the new isolated emulator; existing emulator instances, system proxy, VPN and DNS configurations were unchanged.",
+  "accountDataPublished": false
+}

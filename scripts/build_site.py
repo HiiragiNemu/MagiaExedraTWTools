@@ -7,7 +7,7 @@ import re
 import shutil
 
 ROOT=Path(__file__).resolve().parents[1]
-TOOLS_VERSION='1.4.0'
+TOOLS_VERSION='1.4.1'
 REPO='https://github.com/HiiragiNemu/MagiaExedraTWTools'
 
 def build(output: Path):

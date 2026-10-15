@@ -1,11 +1,33 @@
 {
   "schemaVersion": 1,
-  "verifiedAt": "2026-09-13",
+  "verifiedAt": "2026-10-15",
   "packageName": "com.aniplex.magia.exedra.jp",
   "source": "Hash-pinned original JP XAPK mirrored in this repository's GitHub Releases",
-  "latestVersion": "3.18.0",
-  "latestEndpoint": "https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.18.0/com.aniplex.magia.exedra.jp-3.18.0.xapk",
+  "latestVersion": "3.21.0",
+  "latestEndpoint": "https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.21.0/com.aniplex.magia.exedra.jp-3.21.0.xapk",
   "releases": [
+    {
+      "versionName": "3.21.0",
+      "versionCode": 26100810,
+      "length": 959302997,
+      "sha256": "9add4ea7d585c532b082e41b8bcaad1a7f567cb7e0a4692087dd8632d1a32df2",
+      "minSdk": 28,
+      "signerCertificateSha256": "352ac1e016112fcbb1867771ab5887af0790e64c70ed30d4f7b00801840a1168",
+      "splits": {
+        "base": {
+          "length": 13067392,
+          "sha256": "45862f69ed9c5474a6ccda5ce4e6f1b23abd4bdf21bbb2335d9e2b25076d6950"
+        },
+        "base_assets": {
+          "length": 616873185,
+          "sha256": "030d5277d190d665c55e5b6e341c74c26aadbfe5d87c8fec60b0572486f43611"
+        },
+        "config.arm64_v8a": {
+          "length": 328932341,
+          "sha256": "a29da70e5213fe37422a85d5f582cac0e466d4c4dc54a12d81c11f89ab7f7111"
+        }
+      }
+    },
     {
       "versionName": "3.18.0",
       "versionCode": 26090311,
@@ -13,9 +35,18 @@
       "sha256": "43cd6eca5a8af7e8bf017fd922e4b0a9260e63933051f5eff3ae21c89a89a514",
       "minSdk": 28,
       "splits": {
-        "base": {"length": 16839758, "sha256": "adb1b0d8169207510763d4729a47c56114d18aca0854d657a75adab0c085063d"},
-        "base_assets": {"length": 582993441, "sha256": "96ebff642f104eb934254b9b016003284b3c089a63506bec7ab5965dd32cdff4"},
-        "config.arm64_v8a": {"length": 323357685, "sha256": "8204abbafeebc9334a71d260798c6e290a57f672be4cf57bd58b15b24a1a0fd0"}
+        "base": {
+          "length": 16839758,
+          "sha256": "adb1b0d8169207510763d4729a47c56114d18aca0854d657a75adab0c085063d"
+        },
+        "base_assets": {
+          "length": 582993441,
+          "sha256": "96ebff642f104eb934254b9b016003284b3c089a63506bec7ab5965dd32cdff4"
+        },
+        "config.arm64_v8a": {
+          "length": 323357685,
+          "sha256": "8204abbafeebc9334a71d260798c6e290a57f672be4cf57bd58b15b24a1a0fd0"
+        }
       }
     }
   ]
