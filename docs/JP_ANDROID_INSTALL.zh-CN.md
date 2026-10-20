@@ -1,22 +1,24 @@
-# 日服 Exedra 3.21.0：免 Google 日区账号安装与更新
+# 日服 Exedra 3.21.1：免 Google 日区账号安装与更新
 
-2026-10-15 核验版本：**3.21.0（26100810）**。原版 Android 三 split，最低 Android 9、arm64；APK 未修改、未重签名。安装工具版本为 **v1.4.1**，与游戏版本分别管理。
+> **原包已公开（2026-10-20）**：固定 GitHub 下载已匿名读回，文件长度及服务器 SHA-256 与本地原版包一致，分段内容一致；三个 APK 原始签名通过。新版设备安装与登录尚未测试。
 
-## 这次修复了什么
+2026-10-20 核验版本：**3.21.1（26101610）**。原版 Android 三 split，最低 Android 9、arm64；APK 未修改、未重签名。安装工具版本为 **v1.4.2**，与游戏版本分别管理。
 
-旧清单停在 3.18.0，旧 GitHub Release 没有 XAPK 资产，链接返回 404；另一个入口把可变的第三方 latest 下载与旧哈希混用。现统一到下列固定版本、完整三 split 和对应校验值。不要关闭校验来安装来源不明的文件。
+## 本次更新
+
+固定原版包从 3.21.0 更新为 3.21.1，原安装与回滚机制保持不变；旧版清单与测试记录继续保留。新版三 split 的版本和发行方证书已逐个核验。
 
 ## 下载
 
-- [原版 JP 3.21.0 XAPK](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.21.0/com.aniplex.magia.exedra.jp-3.21.0.xapk)
-- [TW/JP 安装工具 v1.4.1](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/tw-jp-tools-v1.4.1/MagiaExedraTWJPTools-v1.4.1.zip)
-- [完整包与三个 split 的校验表](../mobile/SHA256SUMS-jp-3.21.0.txt)
-- [版本与测试记录](JP_CLIENT_3.21.0_VERIFICATION.json)
+- [原版 JP 3.21.1 XAPK](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.21.1/com.aniplex.magia.exedra.jp-3.21.1-26101610.xapk)
+- [TW/JP 安装工具 v1.4.2](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/tw-jp-tools-v1.4.2/MagiaExedraTWJPTools-v1.4.2.zip)
+- [完整包与三个 split 的校验表](../mobile/SHA256SUMS-jp-3.21.1.txt)
+- [版本与测试记录](JP_CLIENT_3.21.1_VERIFICATION.json)
 
-大小：`959302997` bytes。SHA-256：
+大小：`958775052` bytes。SHA-256：
 
 ```text
-9add4ea7d585c532b082e41b8bcaad1a7f567cb7e0a4692087dd8632d1a32df2
+6fa741520da2a01276874711a946df01fc0c4acb101c3a913b457b214fda118f
 ```
 
 下载不要求 GitHub 账号，安装不要求 Google Play 改区。游戏账号继承与网络仍按游戏原有流程处理；本工具不索取账号、密码或引继码。
@@ -35,7 +37,7 @@ python install_jp.py --download-latest --serial HOST:ADB_PORT
 已有下载文件时：
 
 ```text
-python install_jp.py --xapk com.aniplex.magia.exedra.jp-3.21.0.xapk --serial HOST:ADB_PORT
+python install_jp.py --xapk com.aniplex.magia.exedra.jp-3.21.1-26101610.xapk --serial HOST:ADB_PORT
 ```
 
 也可双击 `install_jp.py` 使用向导。工具核验整包与三个 split、原位安装、验证版本/安装来源并保存旧 APK 与回退脚本。默认安装后保持游戏停止，再由你启动。
@@ -60,22 +62,24 @@ adb -s HOST:ADB_PORT install-multiple -r -i com.android.vending com.aniplex.magi
 
 这些手机步骤没有本次实体手机验收，已验证的设备范围见测试记录；不要把模拟器结果描述为所有手机均已实测。
 
-## 本次实际验证
+## 当前版本验证与历史实测
 
-MuMu Android 15 独立空白实例，全程 Google 账号数量为 **0**：完整三 split 安装 → 原生登录 → 开场影片 → 3D 移动 → 教程战斗 → 点击战斗技能并播放攻击，均已实际操作。没有修改或重签游戏 APK，没有复制其他玩家存档。截图与结构化记录见上方测试记录。
+**3.21.1 本次验证范围**：完整 XAPK、三 split、包名、版本与原始签名；既有安装器的离线 `--validate-only` 验证。新版设备安装、启动、登录、战斗与实体手机验收尚未执行。
 
-实体手机、不同网络出口以及长期正式账号流程未逐一实测；这份结果不是所有设备的兼容性保证。已有 Google 组件的设备请保持原状，不要为此卸载系统组件。
+**历史 3.21.0，非本版验收**：MuMu Android 15 独立空白实例曾在零 Google 账号状态完成安装、原生登录、开场影片、3D 移动及教程战斗。保留原始 [3.21.0 记录](JP_CLIENT_3.21.0_VERIFICATION.json)，不将这些结果迁移到 3.21.1。
+
+已有 Google 组件的设备请保持原状，不要为此卸载系统组件。
 
 ## 网络与登录排查
 
 免 Google 日区账号不等于免日服网络条件。安装包下载成功，也不代表游戏登录/API/资源下载线路都可达。
 
 - **提示客户端版本更新**：更新本页完整 XAPK，保留游戏数据。
-- **提示网络错误或登录重试**：先确认日服服务可达；本次测试默认线路收到访问拒绝，日本出口线路才进入后续资源下载。不同出口质量不同，单次打开标题页不足以判断线路稳定。最终已通过可达线路进入教程战斗。
+- **提示网络错误或登录重试**：先确认日服服务可达；历史 3.21.0 测试默认线路收到访问拒绝，日本出口线路才进入后续资源下载。不同出口质量不同，单次打开标题页不足以判断线路稳定。最终已通过可达线路进入教程战斗。
 - 更换线路后关闭游戏进程再打开，避免继续使用旧连接；不必卸载游戏、清除存档或更换 Google 账号。
 - 下载失败时先检查游戏资源 CDN 的连通性；不要因此清除账号或反复卸载。开场的向上滑动提示需要实际滑动，静置不会继续教程。
 - 如需游戏加速器/日本网络出口，由使用者自行配置。安装工具只安装原版包，不修改系统代理、DNS、VPN，不包含共享账号或代理配置。
-- 首次启动还会下载游戏内资源；本次新设备显示约 **2.4 GB**，这与约 959 MB 的 XAPK 是两个步骤。
+- 首次启动还会下载游戏内资源；历史 3.21.0 新设备显示约 **2.4 GB**，这与约 959 MB 的 XAPK 是两个步骤。
 
 ## 遇到更新提示
 

@@ -1,0 +1,4 @@
+6fa741520da2a01276874711a946df01fc0c4acb101c3a913b457b214fda118f  com.aniplex.magia.exedra.jp-3.21.1-26101610.xapk
+2c1862fca18fff39a66f37962daffa3c2e06de53bea57a2c9d8bd264fc7392b9  com.aniplex.magia.exedra.jp.apk
+14a50078639a5e4cb75adc8bd2427c8dba93415e603bd7d92f16c7e5a42075ec  base_assets.apk
+30f17c397207f3dde6bf2c85996e1de56a5b10db2b53490dce565241fff7b9cc  config.arm64_v8a.apk

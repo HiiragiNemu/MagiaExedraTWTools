@@ -19,7 +19,7 @@
 <main>
   <section class="hero wrap" aria-labelledby="title">
     <div class="hero-copy">
-      <p class="eyebrow"><span></span> 原版台服 / 日服 · 公开下载</p>
+      <p class="eyebrow"><span></span> 原版台服 / 日服 · {{PUBLICATION_LABEL}}</p>
       <h1 id="title">记忆的旅途，<br><em>从这里继续。</em></h1>
       <p class="intro">魔法少女小圆 Magia Exedra 台服与日服下载、中文安装指南。<br class="desktop">直接获取原版客户端，保留游戏资料完成升级。</p>
       <div class="hero-actions"><a class="button primary" href="#downloads">获取客户端 <span>↓</span></a><a class="text-link" href="#guide">第一次安装？看这里 →</a></div>
@@ -34,11 +34,11 @@
   </section>
 
   <section class="section wrap" id="downloads" aria-labelledby="download-title">
-    <div class="section-heading"><div><p class="eyebrow">01 / DOWNLOAD</p><h2 id="download-title">需要的文件，都在这里</h2></div><p>公开 GitHub Releases，无需 GitHub 账号。</p></div>
+    <div class="section-heading"><div><p class="eyebrow">01 / DOWNLOAD</p><h2 id="download-title">需要的文件，都在这里</h2></div><p>{{PUBLICATION_NOTE}}</p></div>
     <div class="download-grid">
       <article class="download-card featured"><div class="file-symbol" aria-hidden="true">↓</div><div><span class="tag">游戏客户端 · TW</span><h3>台服原版 XAPK</h3><p>版本 {{VERSION}} · 完整三个 APK split<br>适用于 64 位 Android 手机与 MuMu。</p></div><a class="button primary" href="{{XAPK}}">下载 TW XAPK <small>{{SIZE_MIB}} MiB</small></a></article>
       <article class="download-card featured"><div class="file-symbol" aria-hidden="true">↓</div><div><span class="tag">游戏客户端 · JP</span><h3>日服原版 XAPK</h3><p>版本 {{JP_VERSION}} · 完整三个 APK split<br>直接安装，不依赖 Google Play 改区。</p></div><a class="button primary" href="{{JP_XAPK}}">下载 JP XAPK <small>{{JP_SIZE_MIB}} MiB</small></a></article>
-      <article class="download-card"><div class="file-symbol" aria-hidden="true">⌘</div><div><span class="tag">安装与升级</span><h3>TW 安装工具 {{TOOLS_VERSION}}</h3><p>Python 一键向导、手机脚本与中文说明。<br>电脑升级时自动备份原 APK。</p></div><a class="button secondary" href="{{TOOLS_URL}}">下载工具 ZIP <span>↓</span></a></article>
+      <article class="download-card"><div class="file-symbol" aria-hidden="true">⌘</div><div><span class="tag">安装与升级</span><h3>TW / JP 安装工具 {{TOOLS_VERSION}}</h3><p>Python 一键向导、手机脚本与中文说明。<br>电脑升级时自动备份原 APK。</p></div><a class="button secondary" href="{{TOOLS_URL}}">下载工具 ZIP <span>↓</span></a></article>
     </div>
     <div class="integrity"><div><b>下载后，核对完整文件</b><p>XAPK SHA-256 · {{BYTES}} bytes</p></div><code id="xapk-hash">{{SHA256}}</code><button class="copy small" type="button" data-copy="xapk-hash">复制校验值</button></div>
     <div class="integrity"><div><b>JP 完整文件校验</b><p>XAPK SHA-256 · {{JP_BYTES}} bytes</p></div><code id="jp-xapk-hash">{{JP_SHA256}}</code><button class="copy small" type="button" data-copy="jp-xapk-hash">复制校验值</button></div>
@@ -72,7 +72,7 @@
         <li><span class="step-number">3</span><div><h3>使用 Install with Options 安装完整 split</h3><p>安装 <a href="https://github.com/zacharee/InstallWithOptions/releases">Install with Options 官方 Release</a>，授予 Shizuku 权限，<strong>一次选中全部三个 APK</strong>。Installer package name 填写：</p><div class="command"><code id="installer-name">com.android.vending</code><button type="button" class="copy" data-copy="installer-name">复制</button></div><p>保持签名验证开启，不勾选无关的降级／跳过验证选项。升级不要先卸载已有游戏。</p></div></li>
         <li><span class="step-number">4</span><div><h3>确认版本，再手动启动</h3><p>在应用信息中确认 {{VERSION}}。安装与账号登录是不同环节；出现签名不兼容时停止，不要通过卸载清数据来试错。</p><a class="text-link" href="{{REPO}}/blob/main/docs/TW_ANDROID_PHONE_INSTALL.zh-CN.md">完整手机教程：含 Termux 强校验路线 ↗</a></div></li>
       </ol>
-      <aside class="guide-tip"><b>使用 Termux 的用户</b><p>请下载工具 {{TOOLS_VERSION}}，同步更新 <code>mobile/install_tw_termux.sh</code>。旧手机脚本固定为 1.1.2，会正确拒绝新版包；不要手工跳过校验。</p><p>GUI 安装器不会自动核对本仓库哈希，安装前请自行校验。</p></aside>
+      <aside class="guide-tip"><b>使用 Termux 的用户</b><p>请下载工具 {{TOOLS_VERSION}}，同步更新 <code>mobile/install_tw_termux.sh</code>。旧手机脚本固定为 1.1.2 或 1.1.3，会正确拒绝新版包；不要手工跳过校验。</p><p>GUI 安装器不会自动核对本仓库哈希，安装前请自行校验。</p></aside>
     </div>
   </div></section>
 
@@ -86,9 +86,9 @@
       <details><summary>向导找不到设备，或有多个模拟器</summary><p>开启 MuMu ADB 调试。没有自动发现时输入该实例设置中显示的 ADB 地址；多个实例要明确选择。也可用 TW_ADB 指定 adb.exe 的路径。不要把教程示例端口直接当成你的设备端口。</p></details>
       <details><summary>安装成功之后，仍有网络或登录问题</summary><p>安装、网络与账号登录需要分别判断。保留错误文字与版本信息，不要反复卸载或清数据。本工具不改变 VPN、代理、DNS 或游戏账号，也不收集密码、引继码或会话资料。</p></details>
     </div></div>
-    <div class="verification-note"><span aria-hidden="true">✓</span><div><b>可追溯的 TW / JP 原版文件</b><p>两个版本均公开完整 XAPK、包名、版本号和 SHA-256。下载与 split 安装不要求 Google Play 改区；安装成功与实际登录验收分别记录。</p></div><a href="files/jp-verification.json">查看 JP 记录 ↗</a></div>
+    <div class="verification-note"><span aria-hidden="true">✓</span><div><b>可追溯的 TW / JP 原版文件</b><p>两个版本的包名、版本号和 SHA-256 已校验；公开状态见下载区说明。下载与 split 安装不要求 Google Play 改区；安装成功与实际登录验收分别记录。</p></div><a href="files/jp-verification.json">查看 JP 记录 ↗</a></div>
   </section>
 </main>
-<footer class="wrap"><div><b>EXEDRA TW · JP</b><p>社区维护的下载与安装工具，不是游戏官方网站。游戏版权属于原权利人。</p></div><div><a href="https://mme.so-net.tw/">台服官网 ↗</a><a href="https://www.madoka-exedra.com/">日服官网 ↗</a><a href="{{REPO}}">开源仓库 ↗</a><small>更新于 {{DATE}} · TW / JP 原包托管于 GitHub Releases</small></div></footer>
+<footer class="wrap"><div><b>EXEDRA TW · JP</b><p>社区维护的下载与安装工具，不是游戏官方网站。游戏版权属于原权利人。</p></div><div><a href="https://mme.so-net.tw/">台服官网 ↗</a><a href="https://www.madoka-exedra.com/">日服官网 ↗</a><a href="{{REPO}}">开源仓库 ↗</a><small>更新于 {{DATE}} · TW / JP 原包发布状态见下载区</small></div></footer>
 <p id="copy-status" class="sr-only" role="status" aria-live="polite"></p>
 </body></html>

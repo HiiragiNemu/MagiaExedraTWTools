@@ -1,13 +1,15 @@
 # Install or update the original Taiwan XAPK on MuMu
 
+> **Original package published (2026-10-20):** Fixed GitHub downloads passed anonymous readback, matching length, server SHA-256 and bounded byte-range checks. All three original APK signatures passed. Device installation and login are not yet tested for this version.
+
 This tool requires Python 3.10 or newer plus Android Platform Tools. It installs
 the unmodified original XAPK. It does not patch the APK, signature, license
 response, or game code, and it never reads or records game-account data.
 
-The current pin is **1.1.3 (26082020)**. Downloading and installing do not require
+The current pin is **1.1.4 (26091812)**. Downloading and installing do not require
 changing the Google account region. Upgrade in place; do not uninstall first.
 The earlier client was observed starting without a Play redirect; that historical
-result is not a live non-Taiwan-account login test for 1.1.3. Package signatures
+result is not a live non-Taiwan-account login test for 1.1.4. Package signatures
 and offline installer regressions are verified; live login remains unverified.
 Server availability, network routing, guest login, and data handover are separate.
 

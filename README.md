@@ -13,27 +13,26 @@ verification, backup, and rollback.
 
 **[打开 Exedra TW / JP 下载站](https://hiiraginemu.github.io/madeinmagius-site/#exedra)** — 直接下载文件，阅读电脑 / MuMu 与手机中文教程。
 
-日服同步入口： [JP 3.21.0 原版 XAPK](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.21.0/com.aniplex.magia.exedra.jp-3.21.0.xapk) · [日服安装教程](docs/JP_ANDROID_INSTALL.zh-CN.md)。下载和 split 安装不依赖 Google Play 区域切换。
+## 2026-10-20 更新：JP 3.21.1 / TW 1.1.4 / 工具 v1.4.2
 
-日服更新核验：2026-10-15；3.21.0 / 26100810。旧 JP 3.18 Release 缺少资产导致 404；现以固定版本完整包和新清单替代。详见 [日服核验记录](docs/JP_CLIENT_3.21.0_VERIFICATION.json)。
+> **原包已公开（2026-10-20）**：固定 GitHub 下载已匿名读回，文件长度及服务器 SHA-256 与本地原版包一致，分段内容一致；三个 APK 原始签名通过。新版设备安装与登录尚未测试。
 
-## 已发布下载 / 非台区 Google 账号用户（2026-09-12 基线）
+- JP：**3.21.1（26101610）**，[固定原包下载](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.21.1/com.aniplex.magia.exedra.jp-3.21.1-26101610.xapk) · [安装教程](docs/JP_ANDROID_INSTALL.zh-CN.md)。
+- TW：**1.1.4（26091812）**，[固定原包下载](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/v1.1.4/tw.sonet.magiaexedra-1.1.4-26091812.xapk) · [本版说明](docs/TW_CLIENT_1.1.4.zh-CN.md)。
+- [TW/JP 工具 v1.4.2](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/tw-jp-tools-v1.4.2/MagiaExedraTWJPTools-v1.4.2.zip)；Python、Termux 脚本及教程同步更新。
 
-**2026-09-12 更新：台服 Android 1.1.3（26082020）。** 本仓库与下列 Release 下载公开，无需 GitHub 账号。
+下载与完整 split 安装不依赖 Google Play 区域切换。账号继承和游戏登录仍按原流程处理。已有游戏请原位升级，**不要先卸载或清除数据**。
 
-- [下载原版台服 1.1.3 XAPK](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/v1.1.3/tw.sonet.magiaexedra-1.1.3-26082020.xapk)
-- [下载 TW/JP 安装工具 v1.4.1 ZIP（电脑和手机教程均包含）](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/tw-jp-tools-v1.4.1/MagiaExedraTWJPTools-v1.4.1.zip)
-- [本次版本、签名与兼容性说明](docs/TW_CLIENT_1.1.3.zh-CN.md)
-- [Windows / MuMu 安装教程](docs/TW_MUMU_ORIGINAL_INSTALL.zh-CN.md) · [Android 手机教程](docs/TW_ANDROID_PHONE_INSTALL.zh-CN.md)
+新版真实原包、三 split、版本号与原始签名已校验；离线安装器回归与设备安装/游戏验收分开。旧 JP 3.21.0 MuMu 战斗证据及 TW 1.1.3 三实例升级证据保留，但不是这两个新版的运行通过。
 
-电脑用户：下载并解压**工具 ZIP**，运行 `install_tw.py`，选择仓库发布清单中已校验的版本；已有游戏请直接原位升级，保留游戏资料，**不要先卸载或清除数据**。
-手机用户：请使用更新后的 1.1.3 手机教程及脚本，旧手机脚本固定为 1.1.2，需一并更新。
+### 保留的历史公开版本
 
-这些下载与安装步骤不要求把 Google Play 账号切换至台区。实际游戏登录、服务器可用性和账号继承由游戏服务决定；安装成功不等于登录成功。1.1.3 的完整包、三 split、签名连续性与离线安装/升级/回滚已核验；三个 MuMu 实例已完成 1.1.2→1.1.3 原位升级，未卸载或清除数据；该次记录未包含新版非台区账号的实机登录验收，不据此推断后续登录结果。
+- [JP 3.21.0](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.21.0/com.aniplex.magia.exedra.jp-3.21.0.xapk) · [其原始验证记录](docs/JP_CLIENT_3.21.0_VERIFICATION.json)。
+- [TW 1.1.3](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/v1.1.3/tw.sonet.magiaexedra-1.1.3-26082020.xapk) · [其版本说明](docs/TW_CLIENT_1.1.3.zh-CN.md)。
+- [工具 v1.4.1](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/tw-jp-tools-v1.4.1/MagiaExedraTWJPTools-v1.4.1.zip)。
+- 更早 JP 3.18.0、TW 1.1.2/1.0.5 的原清单条目保持不变；历史条目不保证下载端点仍可用或仍满足服务器最低客户端版本。
 
-若旧教程的 GitHub 链接曾显示 404，请使用上述公开地址重新下载。遇到截图所示“应用程序已推出新版本”时应升级 **XAPK 客户端**，不是重新下载游戏内资源。不要把第三方旧版缓存页面或安装器版本号当作最新游戏版本。
-
-这些版本号描述仓库已发布的固定包，不保证等于当前官方最新客户端或游戏内资源目录。`--download-latest` 指本仓库发布清单中的版本，而不是自动确认商店最新版。
+`--download-latest` 选择本仓库清单中的固定版本，不自动证明商店最新。本次两个固定原包 URL 已公开并匿名读回；离线验证使用本地原包和 `--no-refresh-release-manifest`。
 
 ## Supported routes
 
@@ -106,9 +105,9 @@ hashes, and supported ABI before installation.
 Pinned TW original client (JP package and hashes are in the separate guide):
 
 - package: `tw.sonet.magiaexedra`
-- version: `1.1.3` (`26082020`)
+- version: `1.1.4` (`26091812`)
 - XAPK SHA-256:
-  `e99d80c95c746c80258ec5682231861f0ca1dbbb9390b6d764c398ff1c4f5d95`
+  `4cc19af8dbb8091f93e0252738b59e794b1ba8aa14aba15ee5a7cab93ec90e6a`
 
 Check the online release manifest without ADB or an XAPK download:
 

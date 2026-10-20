@@ -7,7 +7,7 @@ import re
 import shutil
 
 ROOT=Path(__file__).resolve().parents[1]
-TOOLS_VERSION='1.4.1'
+TOOLS_VERSION='1.4.2'
 REPO='https://github.com/HiiragiNemu/MagiaExedraTWTools'
 
 def build(output: Path):
@@ -22,6 +22,9 @@ def build(output: Path):
             'JP_VERSION':jp_release['versionName'],'JP_CODE':jp_release['versionCode'],'JP_BYTES':jp_release['length'],
             'JP_SIZE_MIB':f"{jp_release['length']/1048576:.1f}",'JP_SHA256':jp_release['sha256'],
             'JP_XAPK':jp_manifest['latestEndpoint'],'JP_DATE':jp_manifest['verifiedAt']}
+    pending=any(m.get('publicationStatus','PUBLISHED')!='PUBLISHED' for m in (manifest,jp_manifest))
+    values['PUBLICATION_LABEL']='发布候选 · PENDING_PUBLICATION' if pending else '公开下载'
+    values['PUBLICATION_NOTE']='新版原包已本地校验；下列固定链接待 GitHub 公开与匿名读回，当前并非已发布成功。' if pending else '公开 GitHub Releases，无需 GitHub 账号。'
     output=output.resolve();source=(ROOT/'site').resolve()
     if output==source or output.is_relative_to(source):raise ValueError('Choose a separate output directory')
     output.mkdir(parents=True,exist_ok=True)

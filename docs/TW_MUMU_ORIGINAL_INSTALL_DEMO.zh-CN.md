@@ -1,5 +1,7 @@
 # MuMu 原版台服安装演示视频脚本
 
+> **原包已公开（2026-10-20）**：固定 GitHub 下载已匿名读回，文件长度及服务器 SHA-256 与本地原版包一致，分段内容一致；三个 APK 原始签名通过。新版设备安装与登录尚未测试。
+
 本脚本用于演示：不切换台湾区 Google 账号，使用公开工具把完整、未修改的
 台服 XAPK 安装或原位升级到 64 位 MuMu，并在人工确认后启动游戏。
 
@@ -7,17 +9,17 @@
 
 1. 安装 Python 3.10 或更新版本与 Android Platform Tools。
 2. 启动 64 位 MuMu，开启 ADB 调试，暂时关闭游戏。
-3. 从 [最新工具 Release](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/latest)
-   下载并解压 `MagiaExedraTWTools-v*.zip`（版本号会随发布更新）。
+3. 从 [最新工具 Release](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/tag/tw-jp-tools-v1.4.2)
+   下载并解压 `MagiaExedraTWJPTools-v1.4.2.zip`（版本号会随发布更新）。
 4. 可让向导在线下载已固定哈希的 XAPK；为缩短录制，也可提前下载下方原版 XAPK
-   Release 中的 1.1.3 包，放在工具目录旁。
+   Release 中的 1.1.4 包，放在工具目录旁。
 5. 隐藏 Google 邮箱、玩家 ID、引继码、密码、代理订阅与个人目录用户名。
 
 公开入口：
 
 - 仓库：<https://github.com/HiiragiNemu/MagiaExedraTWTools>
-- 最新工具 Release：<https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/latest>
-- 原版 XAPK Release：<https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/tag/v1.1.3>
+- 最新工具 Release：<https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/tag/tw-jp-tools-v1.4.2>
+- 原版 XAPK Release：<https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/tag/v1.1.4>
 - 中文完整说明：<TW_MUMU_ORIGINAL_INSTALL.zh-CN.md>
 
 ## 推荐成片结构
@@ -37,8 +39,8 @@
 展示 Release 中的工具 ZIP 和原版 XAPK，然后运行：
 
 ```text
-certutil -hashfile MagiaExedraTWTools-v当前版本.zip SHA256
-certutil -hashfile tw.sonet.magiaexedra-1.1.3-26082020.xapk SHA256
+certutil -hashfile MagiaExedraTWJPTools-v1.4.2.zip SHA256
+certutil -hashfile tw.sonet.magiaexedra-1.1.4-26091812.xapk SHA256
 ```
 
 把结果与 Release 的 SHA-256 对照。强调向导还会独立验证 XAPK 内的
@@ -91,8 +93,8 @@ adb -s emulator-5554 shell dumpsys package tw.sonet.magiaexedra
 当前固定版本预期显示：
 
 ```text
-versionName=1.1.3
-versionCode=26082020
+versionName=1.1.4
+versionCode=26091812
 installerPackageName=com.android.vending
 base.apk
 split_base_assets.apk
@@ -104,7 +106,7 @@ split_config.arm64_v8a.apk
 ### 6. 人工启动（约 1 分钟）
 
 此时才手动点击 MuMu 中的游戏图标，记录实际启动结果。只有本次实测通过时，
-才展示不再跳转 Google Play 及进入标题、登录或主菜单的结论。1.1.3 的实机登录
+才展示不再跳转 Google Play 及进入标题、登录或主菜单的结论。1.1.4 的实机登录
 仍待验证。若画面出现玩家 ID、引继码或其他账号资料，后期必须打码。
 
 建议旁白：

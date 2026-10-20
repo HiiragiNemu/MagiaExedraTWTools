@@ -1,7 +1,9 @@
 # Install the original TW XAPK entirely on one Android 11+ phone
 
+> **Original package published (2026-10-20):** Fixed GitHub downloads passed anonymous readback, matching length, server SHA-256 and bounded byte-range checks. All three original APK signatures passed. Device installation and login are not yet tested for this version.
+
 This guide provides two computer-free routes that do not require a Taiwan-region
-Google account. Both install the same unmodified, originally signed TW 1.1.3
+Google account. Both install the same unmodified, originally signed TW 1.1.4
 three-split XAPK and set Android's installer package name to
 `com.android.vending`.
 
@@ -13,25 +15,25 @@ Android 11/API 30 or newer is required for the built-in on-device Wireless
 debugging flow. On Android 10 and older, use computer-assisted ADB or the
 Windows/MuMu wizard in this repository.
 
-Update the tools ZIP too: the older Termux script pins 1.1.2 and rejects the new XAPK.
+Update the tools ZIP too: older Termux scripts pin 1.1.2 or 1.1.3 and rejects the new XAPK.
 Do not uninstall or clear data before upgrading. Live non-Taiwan-account login on
-1.1.3 remains unverified; package/installation checks are not login acceptance.
+1.1.4 remains unverified; package/installation checks are not login acceptance.
 
 ## Download and trust pins
 
 Original XAPK:
 
-<https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/v1.1.3/tw.sonet.magiaexedra-1.1.3-26082020.xapk>
+<https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/v1.1.4/tw.sonet.magiaexedra-1.1.4-26091812.xapk>
 
 ```text
 Size: 769647949 bytes
-SHA-256: e99d80c95c746c80258ec5682231861f0ca1dbbb9390b6d764c398ff1c4f5d95
+SHA-256: 4cc19af8dbb8091f93e0252738b59e794b1ba8aa14aba15ee5a7cab93ec90e6a
 ```
 
 The three split pins are in
-[`mobile/SHA256SUMS-tw-1.1.3.txt`](../mobile/SHA256SUMS-tw-1.1.3.txt).
+[`mobile/SHA256SUMS-tw-1.1.4.txt`](../mobile/SHA256SUMS-tw-1.1.4.txt).
 A future client needs a newly verified XAPK and split set; never apply these
-1.1.3 constants to another version.
+1.1.4 constants to another version.
 
 Keep about 2.5 GiB free for the XAPK, extracted splits, and package-manager
 staging. `-r` preserves app data during an update. The phone script does not
@@ -49,7 +51,7 @@ back up the previous APKs and is not an application-data backup tool.
    With Termux, run:
 
    ```text
-   sha256sum ~/storage/downloads/tw.sonet.magiaexedra-1.1.3-26082020.xapk
+   sha256sum ~/storage/downloads/tw.sonet.magiaexedra-1.1.4-26091812.xapk
    ```
 
    It must match the complete value above. A trusted local SHA-256 utility is
@@ -111,7 +113,7 @@ the script requires an explicit selection rather than guessing.
 ### 3. Install
 
 ```text
-bash mobile/install_tw_termux.sh ~/storage/downloads/tw.sonet.magiaexedra-1.1.3-26082020.xapk
+bash mobile/install_tw_termux.sh ~/storage/downloads/tw.sonet.magiaexedra-1.1.4-26091812.xapk
 ```
 
 The script:
@@ -122,7 +124,7 @@ The script:
 3. auto-selects the sole connected local Wireless ADB endpoint;
 4. requires Android 11/API 30 or newer;
 5. runs `adb install-multiple -r -i com.android.vending` with all three splits;
-6. verifies version `1.1.3 (26082020)`, installed paths, and installer package;
+6. verifies version `1.1.4 (26091812)`, installed paths, and installer package;
 7. force-stops the package and never launches it.
 
 When several wireless endpoints are ready:

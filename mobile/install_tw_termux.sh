@@ -1,30 +1,30 @@
 #!/data/data/com.termux/files/usr/bin/bash
-# Install/update the pinned, unmodified Magia Exedra TW 1.1.3 XAPK from Termux.
+# Install/update the pinned, unmodified Magia Exedra TW 1.1.4 XAPK from Termux.
 # Android 11+ Wireless debugging must already be paired and connected.
 
 set -euo pipefail
 
 PACKAGE_NAME="tw.sonet.magiaexedra"
 INSTALLER_PACKAGE="com.android.vending"
-EXPECTED_VERSION_NAME="1.1.3"
-EXPECTED_VERSION_CODE="26082020"
+EXPECTED_VERSION_NAME="1.1.4"
+EXPECTED_VERSION_CODE="26091812"
 
 EXPECTED_XAPK_SIZE="769647949"
-EXPECTED_XAPK_SHA256="e99d80c95c746c80258ec5682231861f0ca1dbbb9390b6d764c398ff1c4f5d95"
+EXPECTED_XAPK_SHA256="4cc19af8dbb8091f93e0252738b59e794b1ba8aa14aba15ee5a7cab93ec90e6a"
 
 EXPECTED_BASE_SIZE="15525983"
-EXPECTED_BASE_SHA256="43d324fbd903cc726097f264eeb1c78834c9e057bcd586c8a86a45668b42e705"
+EXPECTED_BASE_SHA256="804fbc65427bb1f807de47049b216b61cfe4a945bcb3f3cdab53be8519129877"
 EXPECTED_ASSETS_SIZE="522717141"
-EXPECTED_ASSETS_SHA256="fd275d264aaf27157cb14b907d7bcbf1401700062d674e9ef3423c7c3a530abe"
+EXPECTED_ASSETS_SHA256="95b2bd70d37aad9cfdc81a570272d615b620f4928574acf96c4f068e95638c75"
 EXPECTED_ARM64_SIZE="231103403"
-EXPECTED_ARM64_SHA256="5cd12269989c141f41886e329891c70d82740e5b41931482e660a489530f6cbb"
+EXPECTED_ARM64_SHA256="0e073825714e4530db73bd87bf3781ab73d97f86388cc92f73e3c24d701902fc"
 
 usage() {
     cat <<'EOF'
 Usage:
   bash mobile/install_tw_termux.sh [--serial WIRELESS_ADB_SERIAL] /path/to/original.xapk
 
-The script accepts only the pinned original TW 1.1.3 XAPK. It verifies the
+The script accepts only the pinned original TW 1.1.4 XAPK. It verifies the
 whole XAPK and all three split APKs, installs with -r while attributing the
 installer to com.android.vending, verifies the installed package, force-stops
 it, and never launches the game.
