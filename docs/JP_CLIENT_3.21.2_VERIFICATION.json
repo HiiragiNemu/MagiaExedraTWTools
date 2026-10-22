@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "platform": "android-jp",
+  "packageName": "com.aniplex.magia.exedra.jp",
+  "versionName": "3.21.2",
+  "versionCode": 26102016,
+  "minSdk": 28,
+  "verifiedAt": "2026-10-22",
+  "publicationStatus": "PUBLISHED",
+  "xapk": {
+    "length": 958742220,
+    "sha256": "6bbae00ab7e95b5e6f391ecf48c9d7a628599615a96cf0d0953ec1e08bef0a45",
+    "assetName": "com.aniplex.magia.exedra.jp-3.21.2-26102016.xapk"
+  },
+  "splits": [
+    {
+      "role": "base",
+      "length": 13067392,
+      "sha256": "33438f54d119f0da6936f7539adf6fbab0498f0a6e9f93fbcebc39cb0f020374"
+    },
+    {
+      "role": "base_assets",
+      "length": 616852705,
+      "sha256": "92b9bf13b9a8f288f3ab5b493c16c3b68e5e08e22fb4919b0e98478add90f7d5"
+    },
+    {
+      "role": "config.arm64_v8a",
+      "length": 328817653,
+      "sha256": "714914fa2b26346021dbcc7ce6a57230f7f8e1bde2ebe8281a16451c60743d48"
+    }
+  ],
+  "signerCertificateSha256": "352ac1e016112fcbb1867771ab5887af0790e64c70ed30d4f7b00801840a1168",
+  "signatureVerification": {
+    "status": "PASS",
+    "apkCount": 3,
+    "method": "apksigner verify --verbose --print-certs plus aapt dump badging",
+    "allCommandExitCodes": [
+      0,
+      0,
+      0
+    ],
+    "signerContinuity": "matches previously verified original publisher certificate"
+  },
+  "source": {
+    "downloadEndpoint": "https://d.apkpure.net/b/XAPK/com.aniplex.magia.exedra.jp?version=latest",
+    "httpStatus": 200,
+    "downloadedAt": "2026-10-22T10:49:21.717583+00:00"
+  },
+  "offlineInstallerValidation": {
+    "status": "PASS",
+    "knownRelease": "3.21.2",
+    "method": "unchanged install entrypoint --validate-only --no-refresh-release-manifest with real local original XAPK",
+    "exitCode": 0,
+    "deviceOperations": 0,
+    "networkRequests": 0,
+    "trust": "whole XAPK, package identity, binary AndroidManifest version, required roles, lengths and per-split SHA-256"
+  },
+  "runtime": {
+    "installation": "NOT_TESTED_FOR_THIS_VERSION",
+    "loginAndGameplay": "NOT_TESTED_FOR_THIS_VERSION",
+    "physicalPhones": "NOT_TESTED_FOR_THIS_VERSION",
+    "historicalEvidenceOnly": "JP 3.21.0 MuMu gameplay and TW 1.1.3 MuMu upgrade records remain version-specific; not inherited by this release."
+  },
+  "networkChanges": "None. Installer semantics remain unchanged.",
+  "accountDataPublished": false,
+  "publicationVerification": {
+    "checkedUtc": "2026-10-22T11:21:52.443009+00:00",
+    "authenticated": false,
+    "method": "Anonymous API server SHA-256 digest plus fixed URL HEAD/length and bounded byte-range equality; small checksum files fully read. No redundant full XAPK download.",
+    "assets": [
+      {
+        "name": "com.aniplex.magia.exedra.jp-3.21.2-26102016.xapk",
+        "url": "https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.21.2/com.aniplex.magia.exedra.jp-3.21.2-26102016.xapk",
+        "apiHttp": 200,
+        "headHttp": 200,
+        "length": 958742220,
+        "githubAssetDigest": "sha256:6bbae00ab7e95b5e6f391ecf48c9d7a628599615a96cf0d0953ec1e08bef0a45",
+        "digestMatchesOriginal": true,
+        "rangeHttp": 206,
+        "contentRange": "bytes 0-65535/958742220",
+        "first65536BytesMatch": true
+      },
+      {
+        "name": "SHA256SUMS-jp-3.21.2.txt",
+        "url": "https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.21.2/SHA256SUMS-jp-3.21.2.txt",
+        "apiHttp": 200,
+        "headHttp": 200,
+        "length": 382,
+        "githubAssetDigest": "sha256:c182b76cad6f458a38f4b96131f32f6d00eab4e2a82d1a8341b616f551ce2eb0",
+        "digestMatchesOriginal": true,
+        "fullSmallFileHashMatch": true
+      }
+    ]
+  }
+}

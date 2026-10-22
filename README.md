@@ -13,26 +13,28 @@ verification, backup, and rollback.
 
 **[打开 Exedra TW / JP 下载站](https://hiiraginemu.github.io/madeinmagius-site/#exedra)** — 直接下载文件，阅读电脑 / MuMu 与手机中文教程。
 
-## 2026-10-20 更新：JP 3.21.1 / TW 1.1.4 / 工具 v1.4.2
+## 2026-10-22 更新：JP 3.21.2 / TW 1.1.4 / 工具 v1.4.3
 
-> **原包已公开（2026-10-20）**：固定 GitHub 下载已匿名读回，文件长度及服务器 SHA-256 与本地原版包一致，分段内容一致；三个 APK 原始签名通过。新版设备安装与登录尚未测试。
+> **原包已公开（2026-10-22）**：JP 3.21.2 固定 GitHub 下载已匿名读回，文件长度及服务器 SHA-256 与本地原版包一致，分段内容一致；三个 APK 原始签名通过。新版设备安装与登录尚未测试。 台服 1.1.4 保留 2026-10-20 已公开的原包与验证记录。
 
-- JP：**3.21.1（26101610）**，[固定原包下载](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.21.1/com.aniplex.magia.exedra.jp-3.21.1-26101610.xapk) · [安装教程](docs/JP_ANDROID_INSTALL.zh-CN.md)。
+- JP：**3.21.2（26102016）**，[固定原包下载](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.21.2/com.aniplex.magia.exedra.jp-3.21.2-26102016.xapk) · [安装教程](docs/JP_ANDROID_INSTALL.zh-CN.md)。
 - TW：**1.1.4（26091812）**，[固定原包下载](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/v1.1.4/tw.sonet.magiaexedra-1.1.4-26091812.xapk) · [本版说明](docs/TW_CLIENT_1.1.4.zh-CN.md)。
-- [TW/JP 工具 v1.4.2](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/tw-jp-tools-v1.4.2/MagiaExedraTWJPTools-v1.4.2.zip)；Python、Termux 脚本及教程同步更新。
+- [TW/JP 工具 v1.4.3](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/tw-jp-tools-v1.4.3/MagiaExedraTWJPTools-v1.4.3.zip)；更新 JP 离线清单与教程，安装器和 TW Termux 脚本保持不变。
 
 下载与完整 split 安装不依赖 Google Play 区域切换。账号继承和游戏登录仍按原流程处理。已有游戏请原位升级，**不要先卸载或清除数据**。
 
-新版真实原包、三 split、版本号与原始签名已校验；离线安装器回归与设备安装/游戏验收分开。旧 JP 3.21.0 MuMu 战斗证据及 TW 1.1.3 三实例升级证据保留，但不是这两个新版的运行通过。
+新版真实原包、三 split、版本号与原始签名已校验；离线安装器回归与设备安装/游戏验收分开。旧 JP 3.21.0 MuMu 战斗证据及 TW 1.1.3 三实例升级证据保留，但不是 JP 3.21.2 或 TW 1.1.4 的运行通过。
 
 ### 保留的历史公开版本
 
+- [JP 3.21.1](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.21.1/com.aniplex.magia.exedra.jp-3.21.1-26101610.xapk) · [其原始验证记录](docs/JP_CLIENT_3.21.1_VERIFICATION.json)。
+- [工具 v1.4.2](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/tw-jp-tools-v1.4.2/MagiaExedraTWJPTools-v1.4.2.zip)。
 - [JP 3.21.0](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.21.0/com.aniplex.magia.exedra.jp-3.21.0.xapk) · [其原始验证记录](docs/JP_CLIENT_3.21.0_VERIFICATION.json)。
 - [TW 1.1.3](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/v1.1.3/tw.sonet.magiaexedra-1.1.3-26082020.xapk) · [其版本说明](docs/TW_CLIENT_1.1.3.zh-CN.md)。
 - [工具 v1.4.1](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/tw-jp-tools-v1.4.1/MagiaExedraTWJPTools-v1.4.1.zip)。
 - 更早 JP 3.18.0、TW 1.1.2/1.0.5 的原清单条目保持不变；历史条目不保证下载端点仍可用或仍满足服务器最低客户端版本。
 
-`--download-latest` 选择本仓库清单中的固定版本，不自动证明商店最新。本次两个固定原包 URL 已公开并匿名读回；离线验证使用本地原包和 `--no-refresh-release-manifest`。
+`--download-latest` 选择本仓库清单中的固定版本，不自动证明商店最新。JP 3.21.2 固定原包 URL 已公开并匿名读回；TW 1.1.4 保留已公开固定地址。离线验证使用本地原包和 `--no-refresh-release-manifest`。
 
 ## Supported routes
 

@@ -1,11 +1,34 @@
 {
   "schemaVersion": 1,
-  "verifiedAt": "2026-10-20",
+  "verifiedAt": "2026-10-22",
   "packageName": "com.aniplex.magia.exedra.jp",
   "source": "Original signed XAPK; fixed public GitHub mirror verified by anonymous readback.",
-  "latestVersion": "3.21.1",
-  "latestEndpoint": "https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.21.1/com.aniplex.magia.exedra.jp-3.21.1-26101610.xapk",
+  "latestVersion": "3.21.2",
+  "latestEndpoint": "https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.21.2/com.aniplex.magia.exedra.jp-3.21.2-26102016.xapk",
   "releases": [
+    {
+      "versionName": "3.21.2",
+      "versionCode": 26102016,
+      "length": 958742220,
+      "sha256": "6bbae00ab7e95b5e6f391ecf48c9d7a628599615a96cf0d0953ec1e08bef0a45",
+      "minSdk": 28,
+      "splits": {
+        "base": {
+          "length": 13067392,
+          "sha256": "33438f54d119f0da6936f7539adf6fbab0498f0a6e9f93fbcebc39cb0f020374"
+        },
+        "base_assets": {
+          "length": 616852705,
+          "sha256": "92b9bf13b9a8f288f3ab5b493c16c3b68e5e08e22fb4919b0e98478add90f7d5"
+        },
+        "config.arm64_v8a": {
+          "length": 328817653,
+          "sha256": "714914fa2b26346021dbcc7ce6a57230f7f8e1bde2ebe8281a16451c60743d48"
+        }
+      },
+      "signerCertificateSha256": "352ac1e016112fcbb1867771ab5887af0790e64c70ed30d4f7b00801840a1168",
+      "publicationStatus": "PUBLISHED"
+    },
     {
       "versionName": "3.21.1",
       "versionCode": 26101610,
@@ -75,37 +98,37 @@
   ],
   "publicationStatus": "PUBLISHED",
   "upstreamVerification": {
-    "checkedAt": "2026-10-20",
-    "latestObservedVersion": "3.21.1",
+    "checkedAt": "2026-10-22",
+    "latestObservedVersion": "3.21.2",
     "result": "Downloaded XAPK and three original APK signatures verified; public mirror verified.",
     "sourceDownloadEndpoint": "https://d.apkpure.net/b/XAPK/com.aniplex.magia.exedra.jp?version=latest",
     "googlePlayUrl": "https://play.google.com/store/apps/details?id=com.aniplex.magia.exedra.jp",
     "signatureContinuity": "all three APKs match the previously verified original publisher certificate"
   },
   "publicationVerification": {
-    "checkedUtc": "2026-10-20T09:36:45.917888+00:00",
+    "checkedUtc": "2026-10-22T11:21:52.443009+00:00",
     "authenticated": false,
     "method": "Anonymous API server SHA-256 digest plus fixed URL HEAD/length and bounded byte-range equality; small checksum files fully read. No redundant full XAPK download.",
     "assets": [
       {
-        "name": "com.aniplex.magia.exedra.jp-3.21.1-26101610.xapk",
-        "url": "https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.21.1/com.aniplex.magia.exedra.jp-3.21.1-26101610.xapk",
+        "name": "com.aniplex.magia.exedra.jp-3.21.2-26102016.xapk",
+        "url": "https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.21.2/com.aniplex.magia.exedra.jp-3.21.2-26102016.xapk",
         "apiHttp": 200,
         "headHttp": 200,
-        "length": 958775052,
-        "githubAssetDigest": "sha256:6fa741520da2a01276874711a946df01fc0c4acb101c3a913b457b214fda118f",
+        "length": 958742220,
+        "githubAssetDigest": "sha256:6bbae00ab7e95b5e6f391ecf48c9d7a628599615a96cf0d0953ec1e08bef0a45",
         "digestMatchesOriginal": true,
         "rangeHttp": 206,
-        "contentRange": "bytes 0-65535/958775052",
+        "contentRange": "bytes 0-65535/958742220",
         "first65536BytesMatch": true
       },
       {
-        "name": "SHA256SUMS-jp-3.21.1.txt",
-        "url": "https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.21.1/SHA256SUMS-jp-3.21.1.txt",
+        "name": "SHA256SUMS-jp-3.21.2.txt",
+        "url": "https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.21.2/SHA256SUMS-jp-3.21.2.txt",
         "apiHttp": 200,
         "headHttp": 200,
         "length": 382,
-        "githubAssetDigest": "sha256:d3b582d0b1a0c62e16459d4469355be791873f0d4ae73069582f25b8eee25e7b",
+        "githubAssetDigest": "sha256:c182b76cad6f458a38f4b96131f32f6d00eab4e2a82d1a8341b616f551ce2eb0",
         "digestMatchesOriginal": true,
         "fullSmallFileHashMatch": true
       }

@@ -9,8 +9,8 @@
 
 1. 安装 Python 3.10 或更新版本与 Android Platform Tools。
 2. 启动 64 位 MuMu，开启 ADB 调试，暂时关闭游戏。
-3. 从 [最新工具 Release](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/tag/tw-jp-tools-v1.4.2)
-   下载并解压 `MagiaExedraTWJPTools-v1.4.2.zip`（版本号会随发布更新）。
+3. 从 [最新工具 Release](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/tag/tw-jp-tools-v1.4.3)
+   下载并解压 `MagiaExedraTWJPTools-v1.4.3.zip`（版本号会随发布更新）。
 4. 可让向导在线下载已固定哈希的 XAPK；为缩短录制，也可提前下载下方原版 XAPK
    Release 中的 1.1.4 包，放在工具目录旁。
 5. 隐藏 Google 邮箱、玩家 ID、引继码、密码、代理订阅与个人目录用户名。
@@ -18,7 +18,7 @@
 公开入口：
 
 - 仓库：<https://github.com/HiiragiNemu/MagiaExedraTWTools>
-- 最新工具 Release：<https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/tag/tw-jp-tools-v1.4.2>
+- 最新工具 Release：<https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/tag/tw-jp-tools-v1.4.3>
 - 原版 XAPK Release：<https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/tag/v1.1.4>
 - 中文完整说明：<TW_MUMU_ORIGINAL_INSTALL.zh-CN.md>
 
@@ -39,7 +39,7 @@
 展示 Release 中的工具 ZIP 和原版 XAPK，然后运行：
 
 ```text
-certutil -hashfile MagiaExedraTWJPTools-v1.4.2.zip SHA256
+certutil -hashfile MagiaExedraTWJPTools-v1.4.3.zip SHA256
 certutil -hashfile tw.sonet.magiaexedra-1.1.4-26091812.xapk SHA256
 ```
 
