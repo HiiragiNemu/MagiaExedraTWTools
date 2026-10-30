@@ -1,32 +1,32 @@
-# 日服 Exedra 3.21.2：免 Google 日区账号安装与更新
+# 日服 Exedra 3.22.0：免 Google 日区账号安装与更新
 
-> **原包已公开（2026-10-22）**：JP 3.21.2 固定 GitHub 下载已匿名读回，文件长度及服务器 SHA-256 与本地原版包一致，分段内容一致；三个 APK 原始签名通过。新版设备安装与登录尚未测试。
+> **原包已公开并匿名核验（2026-10-31）**：JP 3.22.0 完整原包与三个 APK 原始签名已核验；固定下载 URL、文件大小、服务器 SHA-256 与分段内容核对通过。工具仍为 v1.4.3，旧工具 ZIP 保持不变。新版设备安装、启动与登录尚未实测。
 
-2026-10-22 核验版本：**3.21.2（26102016）**。原版 Android 三 split，最低 Android 9、arm64；APK 未修改、未重签名。安装工具版本为 **v1.4.3**，与游戏版本分别管理。
+核验版本：**3.22.0（26102219）**。原版 Android 三 split，最低 Android 9、arm64；APK 未修改、未重签名。安装工具版本 **v1.4.3** 与游戏版本分别管理。
 
-## 本次更新
+## 本次更新与下载
 
-固定原版包从 3.21.1 更新为 3.21.2，原安装与回滚机制保持不变；旧版清单与测试记录继续保留。新版三 split 的版本和发行方证书已逐个核验。
+原版包从 3.21.2 更新为 3.22.0；原安装与回滚机制、旧版清单和测试记录继续保留。
 
-## 下载
-
-- [原版 JP 3.21.2 XAPK](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.21.2/com.aniplex.magia.exedra.jp-3.21.2-26102016.xapk)
+- [JP 3.22.0 完整原包](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.22.0/com.aniplex.magia.exedra.jp-3.22.0-26102219.xapk)
 - [TW/JP 安装工具 v1.4.3](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/tw-jp-tools-v1.4.3/MagiaExedraTWJPTools-v1.4.3.zip)
-- [完整包与三个 split 的校验表](../mobile/SHA256SUMS-jp-3.21.2.txt)
-- [版本与测试记录](JP_CLIENT_3.21.2_VERIFICATION.json)
+- [当前 JP 安装清单](https://raw.githubusercontent.com/HiiragiNemu/MagiaExedraTWTools/main/manifests/jp-known-releases.json)
+- [完整包与三个 split 校验表](../mobile/SHA256SUMS-jp-3.22.0.txt) · [版本与测试记录](JP_CLIENT_3.22.0_VERIFICATION.json)
 
-大小：`958742220` bytes。SHA-256：
+大小：`950073201` bytes。SHA-256：
 
 ```text
-6bbae00ab7e95b5e6f391ecf48c9d7a628599615a96cf0d0953ec1e08bef0a45
+6d5e82ae0ea11860b972dab8bdd91bff258694e2447c355e0b8dc9a372407f91
 ```
 
 下载不要求 GitHub 账号，安装不要求 Google Play 改区。游戏账号继承与网络仍按游戏原有流程处理；本工具不索取账号、密码或引继码。
 
-## Windows / MuMu（推荐工具方式）
+## Windows / MuMu
+
+以下为使用者安装说明；本轮维护只运行不连接设备的验证，没有操作游戏、模拟器或手机。
 
 1. 安装 Python 3.10+ 和 Android Platform Tools，打开目标设备 ADB 调试。
-2. 解压工具 ZIP，连接目标设备；多实例时明确选中自己的地址。
+2. 解压现有 v1.4.3 工具，连接目标设备；多实例时明确选中自己的地址。
 3. 在工具目录执行，`HOST:ADB_PORT` 替换成自己的设备地址：
 
 ```text
@@ -34,13 +34,25 @@ adb connect HOST:ADB_PORT
 python install_jp.py --download-latest --serial HOST:ADB_PORT
 ```
 
-已有下载文件时：
+`--download-latest` 会读取 main 的当前清单。网络失败时会退回 ZIP 内置清单，请核对实际选择的版本；`--check-release` 仅显示本次在线检查结果，不把新清单保存到本地。
+
+### 已有下载文件 / 离线验证
+
+旧 v1.4.3 ZIP 内置 JP 3.21.2。先下载上面的“当前 JP 安装清单”，另存为工具目录中的 `jp-known-releases-current.json`；单独 `--xapk` 不会在线更新它。
+
+先仅验证，不连接设备：
 
 ```text
-python install_jp.py --xapk com.aniplex.magia.exedra.jp-3.21.2-26102016.xapk --serial HOST:ADB_PORT
+python install_jp.py --xapk com.aniplex.magia.exedra.jp-3.22.0-26102219.xapk --release-manifest jp-known-releases-current.json --validate-only --no-refresh-release-manifest
 ```
 
-也可双击 `install_jp.py` 使用向导。工具核验整包与三个 split、原位安装、验证版本/安装来源并保存旧 APK 与回退脚本。默认安装后保持游戏停止，再由你启动。
+核验通过后安装：
+
+```text
+python install_jp.py --xapk com.aniplex.magia.exedra.jp-3.22.0-26102219.xapk --release-manifest jp-known-releases-current.json --no-refresh-release-manifest --serial HOST:ADB_PORT
+```
+
+工具核验整包与三个 split、原位安装、验证版本/安装来源并保存旧 APK 与回退脚本。默认安装后保持游戏停止，再由你启动。
 
 **已有游戏不要先卸载或清除数据。** `-r` 原位升级保留资料；请先自行确认账号的继承/绑定方式。签名不同或安装失败时停止，不通过卸载试错。APK 回退不等于存档回退，Android 也可能拒绝降级。
 
@@ -64,9 +76,9 @@ adb -s HOST:ADB_PORT install-multiple -r -i com.android.vending com.aniplex.magi
 
 ## 当前版本验证与历史实测
 
-**3.21.2 本次验证范围**：完整 XAPK、三 split、包名、版本与原始签名；既有安装器的离线 `--validate-only` 验证。新版设备安装、启动、登录、战斗与实体手机验收尚未执行。
+**3.22.0 本次验证范围**：完整 XAPK、三 split、包名、版本与原始签名；既有安装器的离线 `--validate-only` 验证。新版设备安装、启动、登录、战斗与实体手机验收尚未执行。
 
-**历史 3.21.0，非本版验收**：MuMu Android 15 独立空白实例曾在零 Google 账号状态完成安装、原生登录、开场影片、3D 移动及教程战斗。保留原始 [3.21.0 记录](JP_CLIENT_3.21.0_VERIFICATION.json)，不将这些结果迁移到 3.21.2。
+**历史 3.21.0，非本版验收**：MuMu Android 15 独立空白实例曾在零 Google 账号状态完成安装、原生登录、开场影片、3D 移动及教程战斗。保留原始 [3.21.0 记录](JP_CLIENT_3.21.0_VERIFICATION.json)，不将这些结果迁移到 3.22.0。
 
 已有 Google 组件的设备请保持原状，不要为此卸载系统组件。
 
@@ -83,11 +95,11 @@ adb -s HOST:ADB_PORT install-multiple -r -i com.android.vending com.aniplex.magi
 
 ## 遇到更新提示
 
-客户端强制更新应更新完整 XAPK，不是删除游戏内资源缓存。旧工具可在线读取新发布清单；离线使用请更新工具 ZIP。`--download-latest` 指本仓库最近核验的版本，不自动承诺永远等于商店最新。
+客户端强制更新应更新完整 XAPK，不是删除游戏内资源缓存。旧工具可在线读取新发布清单；离线使用请保存当前 JP 清单并显式传入 `--release-manifest`，旧工具 ZIP 不会因此自动改写。`--download-latest` 指本仓库最近核验的版本，不自动承诺永远等于商店最新。
 
 维护者发布前运行 `python scripts/check_jp_release.py`，检查匿名下载端点、文件长度与 GitHub 资产 SHA-256。每次客户端更新仍须重新核验签名和实际启动。
 
-旧 [3.21.1 验证记录](JP_CLIENT_3.21.1_VERIFICATION.json)与清单继续保留。
+旧 [3.21.2 验证记录](JP_CLIENT_3.21.2_VERIFICATION.json)、[3.21.1 验证记录](JP_CLIENT_3.21.1_VERIFICATION.json)与清单继续保留。
 
-官方版本来源：[Google Play 日服条目](https://play.google.com/store/apps/details?id=com.aniplex.magia.exedra.jp&hl=ja&gl=jp)。原包获取来源：[APKPure 原包下载端点](https://d.apkpure.net/b/XAPK/com.aniplex.magia.exedra.jp?version=latest)；公开使用上方固定版本镜像，避免可变 latest 与固定哈希不一致。
+官方版本来源：[Google Play 日服条目](https://play.google.com/store/apps/details?id=com.aniplex.magia.exedra.jp&hl=ja&gl=jp)。原包获取来源：[APKPure 原包下载端点](https://d.apkpure.net/b/XAPK/com.aniplex.magia.exedra.jp?version=latest)；固定 3.22.0 镜像已公开并匿名读回；安装使用固定镜像与校验清单，避免可变 latest 与固定哈希不一致。
 

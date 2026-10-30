@@ -1,11 +1,34 @@
 {
   "schemaVersion": 1,
-  "verifiedAt": "2026-10-22",
+  "verifiedAt": "2026-10-31",
   "packageName": "com.aniplex.magia.exedra.jp",
-  "source": "Original signed XAPK; fixed public GitHub mirror verified by anonymous readback.",
-  "latestVersion": "3.21.2",
-  "latestEndpoint": "https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.21.2/com.aniplex.magia.exedra.jp-3.21.2-26102016.xapk",
+  "source": "Original signed XAPK verified and published at a fixed GitHub release URL; anonymous size, digest and bounded content readback passed.",
+  "latestVersion": "3.22.0",
+  "latestEndpoint": "https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.22.0/com.aniplex.magia.exedra.jp-3.22.0-26102219.xapk",
   "releases": [
+    {
+      "versionName": "3.22.0",
+      "versionCode": 26102219,
+      "length": 950073201,
+      "sha256": "6d5e82ae0ea11860b972dab8bdd91bff258694e2447c355e0b8dc9a372407f91",
+      "minSdk": 28,
+      "splits": {
+        "base": {
+          "length": 12911744,
+          "sha256": "47901e120dc6e7c241494fbaa941a75f8a15efb2495faa5d0d66baf1906a4289"
+        },
+        "base_assets": {
+          "length": 608126342,
+          "sha256": "1df995831a27fbe18b714f9e1c8afba150a145479306df9c909789433aea4280"
+        },
+        "config.arm64_v8a": {
+          "length": 329030645,
+          "sha256": "c9549c0e57fdf787d07cab57c527d9ac32388d80b235319517b3829b2a079bfa"
+        }
+      },
+      "signerCertificateSha256": "352ac1e016112fcbb1867771ab5887af0790e64c70ed30d4f7b00801840a1168",
+      "publicationStatus": "PUBLISHED"
+    },
     {
       "versionName": "3.21.2",
       "versionCode": 26102016,
@@ -98,40 +121,87 @@
   ],
   "publicationStatus": "PUBLISHED",
   "upstreamVerification": {
-    "checkedAt": "2026-10-22",
-    "latestObservedVersion": "3.21.2",
-    "result": "Downloaded XAPK and three original APK signatures verified; public mirror verified.",
+    "checkedAt": "2026-10-31",
+    "latestObservedVersion": "3.22.0",
+    "result": "Complete XAPK and all three original APK signatures verified; fixed JP 3.22.0 public mirror verified anonymously.",
     "sourceDownloadEndpoint": "https://d.apkpure.net/b/XAPK/com.aniplex.magia.exedra.jp?version=latest",
     "googlePlayUrl": "https://play.google.com/store/apps/details?id=com.aniplex.magia.exedra.jp",
     "signatureContinuity": "all three APKs match the previously verified original publisher certificate"
   },
   "publicationVerification": {
-    "checkedUtc": "2026-10-22T11:21:52.443009+00:00",
+    "status": "PASS",
+    "remoteExistenceVerified": true,
+    "checkedUtc": "2026-10-30T18:30:25.018674+00:00",
     "authenticated": false,
-    "method": "Anonymous API server SHA-256 digest plus fixed URL HEAD/length and bounded byte-range equality; small checksum files fully read. No redundant full XAPK download.",
+    "releaseUrl": "https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/tag/jp-v3.22.0",
+    "releaseId": 429336761,
+    "method": "Anonymous API full-asset SHA-256 digest, fixed URL HEAD size, XAPK first 65536 byte equality and full small checksum readback; no second complete XAPK download.",
     "assets": [
       {
-        "name": "com.aniplex.magia.exedra.jp-3.21.2-26102016.xapk",
-        "url": "https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.21.2/com.aniplex.magia.exedra.jp-3.21.2-26102016.xapk",
-        "apiHttp": 200,
-        "headHttp": 200,
-        "length": 958742220,
-        "githubAssetDigest": "sha256:6bbae00ab7e95b5e6f391ecf48c9d7a628599615a96cf0d0953ec1e08bef0a45",
-        "digestMatchesOriginal": true,
-        "rangeHttp": 206,
-        "contentRange": "bytes 0-65535/958742220",
-        "first65536BytesMatch": true
+        "name": "com.aniplex.magia.exedra.jp-3.22.0-26102219.xapk",
+        "url": "https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.22.0/com.aniplex.magia.exedra.jp-3.22.0-26102219.xapk",
+        "bytes": 950073201,
+        "sha256": "6d5e82ae0ea11860b972dab8bdd91bff258694e2447c355e0b8dc9a372407f91",
+        "githubDigest": "sha256:6d5e82ae0ea11860b972dab8bdd91bff258694e2447c355e0b8dc9a372407f91",
+        "headStatus": 200,
+        "headBytes": 950073201,
+        "rangeStatus": 206,
+        "contentRange": "bytes 0-65535/950073201",
+        "rangeBytes": 65536,
+        "rangeMatchesLocal": true,
+        "verificationScope": "GitHub full-asset digest plus size and first 65536 bytes, not a second full download"
       },
       {
-        "name": "SHA256SUMS-jp-3.21.2.txt",
-        "url": "https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.21.2/SHA256SUMS-jp-3.21.2.txt",
-        "apiHttp": 200,
-        "headHttp": 200,
-        "length": 382,
-        "githubAssetDigest": "sha256:c182b76cad6f458a38f4b96131f32f6d00eab4e2a82d1a8341b616f551ce2eb0",
-        "digestMatchesOriginal": true,
-        "fullSmallFileHashMatch": true
+        "name": "SHA256SUMS-jp-3.22.0.txt",
+        "url": "https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.22.0/SHA256SUMS-jp-3.22.0.txt",
+        "bytes": 386,
+        "sha256": "22d1615f629517fef013222a0c4f1c4d59b57fe5ec158928a8199e5b12dc815c",
+        "githubDigest": "sha256:22d1615f629517fef013222a0c4f1c4d59b57fe5ec158928a8199e5b12dc815c",
+        "headStatus": 200,
+        "headBytes": 386,
+        "fullGetStatus": 200,
+        "fullContentHashMatches": true
       }
     ]
+  },
+  "previousPublishedRelease": {
+    "versionName": "3.21.2",
+    "latestEndpoint": "https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.21.2/com.aniplex.magia.exedra.jp-3.21.2-26102016.xapk",
+    "publicationVerification": {
+      "checkedUtc": "2026-10-22T11:21:52.443009+00:00",
+      "authenticated": false,
+      "method": "Anonymous API server SHA-256 digest plus fixed URL HEAD/length and bounded byte-range equality; small checksum files fully read. No redundant full XAPK download.",
+      "assets": [
+        {
+          "name": "com.aniplex.magia.exedra.jp-3.21.2-26102016.xapk",
+          "url": "https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.21.2/com.aniplex.magia.exedra.jp-3.21.2-26102016.xapk",
+          "apiHttp": 200,
+          "headHttp": 200,
+          "length": 958742220,
+          "githubAssetDigest": "sha256:6bbae00ab7e95b5e6f391ecf48c9d7a628599615a96cf0d0953ec1e08bef0a45",
+          "digestMatchesOriginal": true,
+          "rangeHttp": 206,
+          "contentRange": "bytes 0-65535/958742220",
+          "first65536BytesMatch": true
+        },
+        {
+          "name": "SHA256SUMS-jp-3.21.2.txt",
+          "url": "https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.21.2/SHA256SUMS-jp-3.21.2.txt",
+          "apiHttp": 200,
+          "headHttp": 200,
+          "length": 382,
+          "githubAssetDigest": "sha256:c182b76cad6f458a38f4b96131f32f6d00eab4e2a82d1a8341b616f551ce2eb0",
+          "digestMatchesOriginal": true,
+          "fullSmallFileHashMatch": true
+        }
+      ]
+    }
+  },
+  "toolsCompatibility": {
+    "toolsVersion": "1.4.3",
+    "newToolsRelease": false,
+    "immutableToolsZipUnchanged": true,
+    "onlineSelection": "--download-latest or --check-release refreshes main metadata in memory; --check-release does not persist it.",
+    "localXapk": "--xapk alone does not refresh. With the old tools ZIP, pass the current --release-manifest explicitly."
   }
 }

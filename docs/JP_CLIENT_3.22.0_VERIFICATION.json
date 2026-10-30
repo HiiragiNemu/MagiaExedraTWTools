@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "platform": "android-jp",
+  "packageName": "com.aniplex.magia.exedra.jp",
+  "versionName": "3.22.0",
+  "versionCode": 26102219,
+  "minSdk": 28,
+  "verifiedAt": "2026-10-31",
+  "publicationStatus": "PUBLISHED",
+  "xapk": {
+    "length": 950073201,
+    "sha256": "6d5e82ae0ea11860b972dab8bdd91bff258694e2447c355e0b8dc9a372407f91",
+    "assetName": "com.aniplex.magia.exedra.jp-3.22.0-26102219.xapk"
+  },
+  "splits": [
+    {
+      "role": "base",
+      "length": 12911744,
+      "sha256": "47901e120dc6e7c241494fbaa941a75f8a15efb2495faa5d0d66baf1906a4289"
+    },
+    {
+      "role": "base_assets",
+      "length": 608126342,
+      "sha256": "1df995831a27fbe18b714f9e1c8afba150a145479306df9c909789433aea4280"
+    },
+    {
+      "role": "config.arm64_v8a",
+      "length": 329030645,
+      "sha256": "c9549c0e57fdf787d07cab57c527d9ac32388d80b235319517b3829b2a079bfa"
+    }
+  ],
+  "signerCertificateSha256": "352ac1e016112fcbb1867771ab5887af0790e64c70ed30d4f7b00801840a1168",
+  "signatureVerification": {
+    "status": "PASS",
+    "apkCount": 3,
+    "method": "apksigner verify --verbose --print-certs plus aapt dump badging",
+    "allCommandExitCodes": [
+      0,
+      0,
+      0
+    ],
+    "signerContinuity": "matches previously verified original publisher certificate"
+  },
+  "source": {
+    "downloadEndpoint": "https://d.apkpure.net/b/XAPK/com.aniplex.magia.exedra.jp?version=latest",
+    "httpStatus": 200,
+    "downloadedAt": "2026-10-30T16:10:56.211357+00:00",
+    "archiveCRC": "PASS",
+    "archiveBytesModified": false
+  },
+  "offlineInstallerValidation": {
+    "status": "PASS",
+    "knownRelease": "3.22.0",
+    "method": "unchanged install_jp.py --validate-only --no-refresh-release-manifest with the exact local original XAPK",
+    "exitCode": 0,
+    "deviceOperations": 0,
+    "networkRequests": 0,
+    "trust": "whole XAPK, package identity, binary AndroidManifest version, required roles, lengths and per-split SHA-256"
+  },
+  "runtime": {
+    "installation": "NOT_TESTED_FOR_THIS_VERSION",
+    "loginAndGameplay": "NOT_TESTED_FOR_THIS_VERSION",
+    "physicalPhones": "NOT_TESTED_FOR_THIS_VERSION",
+    "historicalEvidenceOnly": "JP 3.21.0 and TW 1.1.3 device evidence remains version-specific."
+  },
+  "publicationVerification": {
+    "status": "PASS",
+    "remoteExistenceVerified": true,
+    "checkedUtc": "2026-10-30T18:30:25.018674+00:00",
+    "authenticated": false,
+    "releaseUrl": "https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/tag/jp-v3.22.0",
+    "releaseId": 429336761,
+    "method": "Anonymous API full-asset SHA-256 digest, fixed URL HEAD size, XAPK first 65536 byte equality and full small checksum readback; no second complete XAPK download.",
+    "assets": [
+      {
+        "name": "com.aniplex.magia.exedra.jp-3.22.0-26102219.xapk",
+        "url": "https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.22.0/com.aniplex.magia.exedra.jp-3.22.0-26102219.xapk",
+        "bytes": 950073201,
+        "sha256": "6d5e82ae0ea11860b972dab8bdd91bff258694e2447c355e0b8dc9a372407f91",
+        "githubDigest": "sha256:6d5e82ae0ea11860b972dab8bdd91bff258694e2447c355e0b8dc9a372407f91",
+        "headStatus": 200,
+        "headBytes": 950073201,
+        "rangeStatus": 206,
+        "contentRange": "bytes 0-65535/950073201",
+        "rangeBytes": 65536,
+        "rangeMatchesLocal": true,
+        "verificationScope": "GitHub full-asset digest plus size and first 65536 bytes, not a second full download"
+      },
+      {
+        "name": "SHA256SUMS-jp-3.22.0.txt",
+        "url": "https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.22.0/SHA256SUMS-jp-3.22.0.txt",
+        "bytes": 386,
+        "sha256": "22d1615f629517fef013222a0c4f1c4d59b57fe5ec158928a8199e5b12dc815c",
+        "githubDigest": "sha256:22d1615f629517fef013222a0c4f1c4d59b57fe5ec158928a8199e5b12dc815c",
+        "headStatus": 200,
+        "headBytes": 386,
+        "fullGetStatus": 200,
+        "fullContentHashMatches": true
+      }
+    ]
+  },
+  "toolsVersion": "1.4.3",
+  "newToolsReleaseAuthorized": false,
+  "networkChanges": "None",
+  "accountDataPublished": false
+}

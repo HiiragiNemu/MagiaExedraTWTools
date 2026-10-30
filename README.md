@@ -13,7 +13,16 @@ verification, backup, and rollback.
 
 **[打开 Exedra TW / JP 下载站](https://hiiraginemu.github.io/madeinmagius-site/#exedra)** — 直接下载文件，阅读电脑 / MuMu 与手机中文教程。
 
-## 2026-10-22 更新：JP 3.21.2 / TW 1.1.4 / 工具 v1.4.3
+## 2026-10-31 更新：JP 3.22.0 / TW 1.1.4 / 工具仍 v1.4.3
+
+> **JP 3.22.0 原包已公开并匿名核验**：完整包大小、服务器 SHA-256、分段内容与本地原包一致，三个 APK 原始签名通过。新版设备安装、启动和登录尚未实测。工具实现与版本仍为 v1.4.3，已公开的工具 ZIP 不替换，TW 1.1.4 不变。
+
+- JP：**3.22.0（26102219）**，[固定原包下载](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/jp-v3.22.0/com.aniplex.magia.exedra.jp-3.22.0-26102219.xapk) · [安装教程](docs/JP_ANDROID_INSTALL.zh-CN.md) · [核验记录](docs/JP_CLIENT_3.22.0_VERIFICATION.json) · [校验表](mobile/SHA256SUMS-jp-3.22.0.txt)。
+- 旧工具 v1.4.3 的 `python install_jp.py --download-latest --serial HOST:ADB_PORT` 会在线读取本仓库 main 的新清单；网络失败会退回 ZIP 内置的 3.21.2 清单，请核对显示版本。
+- 已有本地 3.22.0 XAPK 时，旧 ZIP 需按教程显式传入当前 `--release-manifest`。`--check-release` 只检查，不保存清单；单独 `--xapk` 不刷新。
+- 全部旧 JP release 保留；本次只更新 JP 安装清单、说明、校验表与回归测试，没有新工具发行。
+
+## 历史更新（2026-10-22）：JP 3.21.2 / TW 1.1.4 / 工具 v1.4.3
 
 > **原包已公开（2026-10-22）**：JP 3.21.2 固定 GitHub 下载已匿名读回，文件长度及服务器 SHA-256 与本地原版包一致，分段内容一致；三个 APK 原始签名通过。新版设备安装与登录尚未测试。 台服 1.1.4 保留 2026-10-20 已公开的原包与验证记录。
 
@@ -34,7 +43,7 @@ verification, backup, and rollback.
 - [工具 v1.4.1](https://github.com/HiiragiNemu/MagiaExedraTWTools/releases/download/tw-jp-tools-v1.4.1/MagiaExedraTWJPTools-v1.4.1.zip)。
 - 更早 JP 3.18.0、TW 1.1.2/1.0.5 的原清单条目保持不变；历史条目不保证下载端点仍可用或仍满足服务器最低客户端版本。
 
-`--download-latest` 选择本仓库清单中的固定版本，不自动证明商店最新。JP 3.21.2 固定原包 URL 已公开并匿名读回；TW 1.1.4 保留已公开固定地址。离线验证使用本地原包和 `--no-refresh-release-manifest`。
+`--download-latest` 选择本仓库清单中的固定版本，不自动证明商店最新。JP 3.22.0 固定原包 URL 已公开并匿名读回；TW 1.1.4 保留已公开固定地址。离线验证使用本地原包和 `--no-refresh-release-manifest`。
 
 ## Supported routes
 
